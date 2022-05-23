@@ -212,7 +212,34 @@ sub(a: Inte, b: Inte): Inte
 
 // Equal
 eql(a: Inte, b: Inte): Bool // Given two Integers, returns true if both are the same and false otherwise.
-  ?eql
+  case a {
+    neg: case b {
+      neg: case a.num {
+        one: case b.num {
+          one: Bool.true
+          pred: Bool.false
+        }
+        pred: case b.num {
+          one: Bool.false
+          pred: eql(Inte.neg(a.num.succ), Inte.neg(b.num.succ))
+        }
+      }
+      pos: Bool.false
+    }
+    pos: case b {
+      neg: Bool.false
+      pos: case a.num {
+        zero: case b.num {
+          zero: Bool.true
+          succ: Bool.false
+        }
+        succ: case b.num {
+          zero: Bool.false
+          succ: eql(Inte.pos(a.num.pred), Inte.pos(b.num.pred))
+        }
+      }
+    }
+  }
 
 
 // Greater than
@@ -268,7 +295,15 @@ ex_06: _
   let posTwo = int(true, 2)
   let posZero = int(true, 0)
 
-//sub
+// equal
+  // eql(negSix, negSix) // true
+  // eql(negFour, posThree) // false
+  // eql(negFour, negFive) // false
+  // eql(posThree, posTwo) // false
+  // eql(posTwo, negFive) // false
+  // eql(posThree, posThree) // true
+
+// sub
   // inte_show(sub(negSix, negSix)) // +0
   // inte_show(sub(negFour, negSix)) // +2
 

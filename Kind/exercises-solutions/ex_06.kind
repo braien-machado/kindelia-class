@@ -328,7 +328,17 @@ max(a: Inte, b: Inte): Inte // if A > B then A else B
 // int(false, 1) = +0
 // int(true,  6) = +3
 hlf(a: Inte): Inte
-  ?hlf
+  let posTwo = int(true, 2)
+  case a {
+    neg: case gtn(a, int(false, 2)) {
+      true: int(true, 0)
+      false: add(int(false, 1), hlf(add(a, posTwo)))
+    }
+    pos: case ltn(a, posTwo) {
+      true: int(true, 0)
+      false: add(int(true, 1), hlf(sub(a, posTwo)))
+    }
+  }
 
 // Division
 // int(true,  2)  / int(true,  2)  = +1
@@ -341,13 +351,19 @@ div(a: Inte, b: Inte): Inte
 ex_06: _
 
   let negFive = int(false, 5)
-  let negSix = int(false, 6)
   let negFour = int(false, 4)
   let negOne = int(false, 1)
+  let negSix = int(false, 6)
   let negTwo = int(false, 2)
+  let posSix = int(true, 6)
   let posThree = int(true, 3)
   let posTwo = int(true, 2)
   let posZero = int(true, 0)
+
+// hlf
+  // inte_show(hlf(negFour)) // -2
+  // inte_show(hlf(negOne)) // +0
+  // inte_show(hlf(posSix)) // +3
 
 // min
   // inte_show(min(negOne, posZero)) // -1

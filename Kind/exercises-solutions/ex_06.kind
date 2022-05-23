@@ -205,7 +205,10 @@ add_nat(a: Nat, b: Nat): Nat
 // int(false, 6) - int(false, 6) = +0
 // int(false, 4) - int(false, 6) = +2
 sub(a: Inte, b: Inte): Inte
-  ?sub
+  case b {
+    neg: add(a, int(true, neg_to_nat(b.num)))
+    pos:add(a, int(false, pos_to_nat(b.num)))
+  }
 
 // Equal
 eql(a: Inte, b: Inte): Bool // Given two Integers, returns true if both are the same and false otherwise.
@@ -257,12 +260,17 @@ div(a: Inte, b: Inte): Inte
 ex_06: _
 
   let negFive = int(false, 5)
+  let negSix = int(false, 6)
   let negFour = int(false, 4)
   let negOne = int(false, 1)
   let negTwo = int(false, 2)
   let posThree = int(true, 3)
   let posTwo = int(true, 2)
   let posZero = int(true, 0)
+
+//sub
+  // inte_show(sub(negSix, negSix)) // +0
+  // inte_show(sub(negFour, negSix)) // +2
 
 // mul
   // inte_show(mul(negTwo, posThree)) // -6

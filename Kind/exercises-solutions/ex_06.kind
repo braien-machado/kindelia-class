@@ -172,7 +172,34 @@ add(a: Inte, b: Inte): Inte
 // int(false, 2) * int(true, 3)  = -6
 // int(false, 4) * int(false, 5) = +20
 mul(a: Inte, b: Inte): Inte
-  ?mul
+  case a {
+    neg: case b {
+      neg: int(true, mul_nat(neg_to_nat(a.num), neg_to_nat(b.num)))
+      pos: int(false, mul_nat(neg_to_nat(a.num), pos_to_nat(b.num)))
+    }
+    pos: case b {
+      neg: int(false, mul_nat(pos_to_nat(a.num), neg_to_nat(b.num)))
+      pos: int(true, mul_nat(pos_to_nat(a.num), pos_to_nat(b.num)))
+    }
+  }
+
+mul_nat(a: Nat, b: Nat): Nat
+  case a {
+    zero: Nat.zero
+    succ: case b {
+      zero: Nat.zero
+      succ: add_nat(b, mul_nat(a.pred, b))
+    }
+  }
+
+add_nat(a: Nat, b: Nat): Nat
+  case a {
+    zero: b
+    succ: case b {
+      zero: a
+      succ: Nat.succ(add_nat(a.pred, b))
+    }
+  }
 
 // Subtracts two Integers
 // int(false, 6) - int(false, 6) = +0
@@ -229,11 +256,20 @@ div(a: Inte, b: Inte): Inte
 
 ex_06: _
 
-  let negOne = int(Bool.false, 1)
-  let negTwo = int(Bool.false, 2)
-  let posTwo = int(Bool.true, 2)
-  let posZero = int(Bool.true, 0)
+  let negFive = int(false, 5)
   let negFour = int(false, 4)
+  let negOne = int(false, 1)
+  let negTwo = int(false, 2)
+  let posThree = int(true, 3)
+  let posTwo = int(true, 2)
+  let posZero = int(true, 0)
+
+// mul
+  // inte_show(mul(negTwo, posThree)) // -6
+  // inte_show(mul(negFour, negFive))  // +20
+  // inte_show(mul(posZero, negFive)) // +0
+  // inte_show(mul(posTwo, posThree)) // +6
+  // inte_show(mul(posTwo, negOne)) // -2
 
 // add
   // inte_show(add(negFour, negTwo)) // -6

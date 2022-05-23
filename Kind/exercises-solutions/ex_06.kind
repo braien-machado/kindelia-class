@@ -278,7 +278,31 @@ gtn(a: Inte, b: Inte): Bool // if A > B then True else false
 // int(false, 1) < int(true,  0) = True
 // int(true,  0) < int(false, 1) = False
 ltn(a: Inte, b: Inte): Bool // if A > B then False else true
-  ?ltn
+  case a {
+    neg: case b {
+      neg: case a.num {
+        one: Bool.false
+        pred: case b.num {
+          one: Bool.true
+          pred: ltn(Inte.neg(a.num.succ), Inte.neg(b.num.succ))
+        }
+      }
+      pos: Bool.true
+    }
+    pos: case b {
+      neg: Bool.false
+      pos: case a.num {
+        zero: case b.num {
+          zero: Bool.false
+          succ: Bool.true
+        }
+        succ: case b.num {
+          zero: Bool.false
+          succ: ltn(Inte.pos(a.num.pred), Inte.pos(b.num.pred))
+        }
+      }
+    }
+  }
 
 // Minimum
 // min(int(false, 1), int(true,  0)  = -1
@@ -318,6 +342,13 @@ ex_06: _
   let posThree = int(true, 3)
   let posTwo = int(true, 2)
   let posZero = int(true, 0)
+
+// ltn
+  // ltn(negTwo, negFive) // false
+  // ltn(posThree, posThree) // false
+  // ltn(negFive, negOne) // true
+  // ltn(negTwo, posZero) // true
+  // ltn(posZero, negTwo) // false
 
 // gtn
   // gtn(negTwo, negFive) // true

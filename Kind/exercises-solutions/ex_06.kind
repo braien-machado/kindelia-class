@@ -345,20 +345,73 @@ hlf(a: Inte): Inte
 // int(false, 8)  / int(true,  4)  = -2
 // int(false, 11) / int(false, 5)  = +2
 // int(true,  10) / int(false, 12) = +0
-div(a: Inte, b: Inte): Inte 
-  ?div
+div(a: Inte, b: Inte): Inte
+  case a {
+    neg: case b {
+      neg: int(true, div_nat(neg_to_nat(a.num), neg_to_nat(b.num)))
+      pos: int(false, div_nat(neg_to_nat(a.num), pos_to_nat(b.num)))
+    }
+    pos: case b {
+      neg: int(false, div_nat(pos_to_nat(a.num), neg_to_nat(b.num)))
+      pos: int(true, div_nat(pos_to_nat(a.num), pos_to_nat(b.num)))
+    }
+  }
+
+div_nat(a: Nat, b: Nat): Nat
+  case ltn_nat(a, b) {
+    true: Nat.zero
+    false: case a {
+      zero: Nat.zero
+      succ: case b {
+        zero: Nat.zero
+        succ: Nat.succ(div_nat(sub_nat(a, b), b))
+      }
+    }
+  }
+
+ltn_nat(a: Nat, b: Nat): Bool
+  case a {
+    zero: case b {
+      zero: Bool.false
+      succ: Bool.true
+    }
+    succ: case b {
+      zero: Bool.false
+      succ: ltn_nat(a.pred, b.pred)
+    }
+  }
+
+sub_nat(a: Nat, b: Nat): Nat
+  case a {
+    zero: Nat.zero
+    succ: case b {
+      zero: a
+      succ: sub_nat(a.pred, b.pred)
+    }
+  }
 
 ex_06: _
 
-  let negFive = int(false, 5)
-  let negFour = int(false, 4)
   let negOne = int(false, 1)
-  let negSix = int(false, 6)
   let negTwo = int(false, 2)
-  let posSix = int(true, 6)
-  let posThree = int(true, 3)
-  let posTwo = int(true, 2)
+  let negFour = int(false, 4)
+  let negFive = int(false, 5)
+  let negSix = int(false, 6)
+  let negEight = int(false, 8)
+  let negEleven = int(false, 11)
+  let negTwelve = int(false, 12)
   let posZero = int(true, 0)
+  let posTwo = int(true, 2)
+  let posThree = int(true, 3)
+  let posFour = int(true, 4)
+  let posSix = int(true, 6)
+  let posTen = int(true, 10)
+
+// div
+  // inte_show(div(posTwo, posTwo)) // +1
+  // inte_show(div(negEight, posFour)) // -2
+  // inte_show(div(negEleven, negFive)) // +2
+  // inte_show(div(posTen, negTwelve)) // +0
 
 // hlf
   // inte_show(hlf(negFour)) // -2

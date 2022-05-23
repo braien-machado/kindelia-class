@@ -248,7 +248,31 @@ eql(a: Inte, b: Inte): Bool // Given two Integers, returns true if both are the 
 // int(false, 2) > int(true,  0) = False
 // int(true,  0) > int(false, 2) = True
 gtn(a: Inte, b: Inte): Bool // if A > B then True else false
-  ?gtn
+  case a {
+    neg: case b {
+      neg: case a.num {
+        one: case b.num {
+          one: Bool.false
+          pred: Bool.true
+        }
+        pred: case b.num {
+          one: Bool.false
+          pred: gtn(Inte.neg(a.num.succ), Inte.neg(b.num.succ))
+        }
+      }
+      pos: Bool.false
+    }
+    pos: case b {
+      neg: Bool.true
+      pos: case a.num {
+        zero: Bool.false
+        succ: case b.num {
+          zero: Bool.true
+          succ: gtn(Inte.pos(a.num.pred), Inte.pos(b.num.pred))
+        }
+      }
+    }
+  }
 
 // Lower than
 // int(false, 1) < int(true,  0) = True
@@ -294,6 +318,13 @@ ex_06: _
   let posThree = int(true, 3)
   let posTwo = int(true, 2)
   let posZero = int(true, 0)
+
+// gtn
+  // gtn(negTwo, negFive) // true
+  // gtn(posThree, posThree) // false
+  // gtn(negFive, negOne) // false
+  // gtn(negTwo, posZero) // false
+  // gtn(posZero, negTwo) // true
 
 // equal
   // eql(negSix, negSix) // true

@@ -308,13 +308,19 @@ ltn(a: Inte, b: Inte): Bool // if A > B then False else true
 // min(int(false, 1), int(true,  0)  = -1
 // min(int(false, 1), int(false, 3)) = -3
 min(a: Inte, b: Inte): Inte // if A < B then A else B
-  ?min
+  case ltn(a, b) {
+    true: a
+    false: b
+  }
 
 // Maximum
 // max(int(false, 1), int(true,  0)) = +0
 // max(int(false, 1), int(false, 3)) = -1
 max(a: Inte, b: Inte): Inte // if A > B then A else B
-  ?max
+  case gtn(a, b) {
+    true: a
+    false: b
+  }
 
 // Half
 // Divides an Integer by two
@@ -342,6 +348,14 @@ ex_06: _
   let posThree = int(true, 3)
   let posTwo = int(true, 2)
   let posZero = int(true, 0)
+
+// min
+  // inte_show(min(negOne, posZero)) // -1
+  // inte_show(min(negOne, negFive)) // -5
+
+// max
+  // inte_show(max(negOne, posZero)) // +0
+  // inte_show(max(negOne, negFive)) // -1
 
 // ltn
   // ltn(negTwo, negFive) // false

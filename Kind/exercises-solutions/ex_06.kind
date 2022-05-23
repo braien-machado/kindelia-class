@@ -1,0 +1,482 @@
+// Integer Exercises
+
+// Integers
+type Inte { 
+  neg(num: Neg)
+  pos(num: Pos)
+}
+
+// Positive Numbers
+type Pos { 
+  zero
+  succ(pred: Pos)
+}
+
+// Negative Numbers
+type Neg { 
+  one
+  pred(succ: Neg)
+}
+
+// example
+// -0 does not exist
+// Increments a negative number by one
+neg_succ(n: Neg): Neg
+  case n { 
+    one:  Neg.one
+    pred: n.succ
+  }
+
+// Functions for negative numbers to help testing 
+// Do not edit those functions
+
+// Converts Neg to Nat
+neg_to_nat(n: Neg): Nat
+  case n { 
+    one:  Nat.succ(Nat.zero)
+    pred: Nat.succ(neg_to_nat(n.succ))
+  }
+  
+// Converts Nat to Neg
+nat_to_neg(n: Nat): Neg
+  neg_succ(nat_to_neg_aux(n))
+  
+  // Aux function for Nat.to_neg
+nat_to_neg_aux(n: Nat): Neg
+  case n {
+    zero: Neg.one
+    succ: Neg.pred(nat_to_neg_aux(n.pred))
+  }
+
+// Converts Pos to Nat
+pos_to_nat(n: Pos): Nat
+  case n { 
+    zero:  Nat.zero
+    succ:  Nat.succ(pos_to_nat(n.pred))
+  }
+
+// Converts Nat to Pos
+nat_to_pos(n: Nat): Pos
+  case n { 
+    zero: Pos.zero
+    succ: Pos.succ(nat_to_pos(n.pred))
+  }
+
+// Converts Pos to String
+pos_show(n: Pos): String
+  "+"|Nat.show(pos_to_nat(n))
+
+// Converts Neg to String
+neg_show(n: Neg): String
+  "-"|Nat.show(neg_to_nat(n))
+
+// Converts Int to String
+inte_show(n: Inte): String
+  case n {
+    neg: neg_show(n.num) 
+    pos: pos_show(n.num) 
+  }
+
+// Creates an int sign
+// true  = Positive 
+// false = Negative
+int(sign: Bool, num: Nat): Inte
+  case sign {
+    true: Inte.pos(nat_to_pos(num))
+    false:
+      case num {
+        zero: Inte.pos(Pos.zero)
+        succ: Inte.neg(nat_to_neg(num))
+      }
+  }
+
+
+// Exercises:
+
+// Increments an Integer
+// int(false, 1)     = +0
+// int(false, 2)     = -1
+// int(true,  2)     = +3
+inc(a: Inte): Inte
+  case a {
+    neg: case a.num {
+      one: Inte.pos(Pos.zero)
+      pred: Inte.neg(a.num.succ)
+    }
+    pos: Inte.pos(Pos.succ(a.num))
+  }
+
+// Decrements an Integer
+// int(false, 1) = -2
+// int(true,  2) = +1
+// int(true,  0) = -1
+dec(a: Inte): Inte
+  case a {
+    neg: Inte.neg(Neg.pred(a.num))
+    pos: case a.num {
+      zero: Inte.neg(Neg.one)
+      succ: Inte.pos(a.num.pred)
+    }
+  }
+
+// Doubles an Integer
+// int(false, 4) = -8
+// int(false, 1) = -2
+// int(true,  2) = +4
+dbl(a: Inte): Inte
+  case a {
+    neg: case a.num {
+      one: dec(a)
+      pred: dec(dec(dbl(Inte.neg(a.num.succ))))
+    }
+    pos: case a.num {
+      zero: a
+      succ: inc(inc(dbl(Inte.pos(a.num.pred))))
+    }
+  }
+
+// Adds two Integers
+// int(false, 4) + int(false, 2) = -6
+// int(false, 4) + int(true,  2) = -2
+add(a: Inte, b: Inte): Inte
+  case a {
+    neg: case a.num { // a is Neg
+      one: dec(b) // a = -1 => b - 1
+      pred: case b { // a < -1
+        neg: case b.num { // b is Neg
+          one: dec(a) // b = -1 => a - 1
+          pred: add(dec(a), Inte.neg(b.num.succ)) // b < -1
+        }
+        pos: case b.num { // b is Pos
+          zero: a // b = 0 => a
+          succ: add(Inte.neg(a.num.succ), dec(b)) // b > 0 
+        }
+      }
+    }
+    pos: case a.num { // a is Pos
+      zero: b // a = 0 => b
+      succ: case b { // a > 0
+        neg: case b.num { // b is Neg
+          one: dec(a) // b = -1 => a - 1
+          pred: add(dec(a), Inte.neg(b.num.succ)) // b < -1
+        }
+        pos: case b.num { // b is Pos
+          zero: a // b = 0 => a
+          succ: add(inc(a), Inte.pos(b.num.pred)) // b > 0
+        }
+      }
+    }
+  }
+
+// Multiplies two Integers
+// int(false, 2) * int(true, 3)  = -6
+// int(false, 4) * int(false, 5) = +20
+mul(a: Inte, b: Inte): Inte
+  case a {
+    neg: case b {
+      neg: int(true, mul_nat(neg_to_nat(a.num), neg_to_nat(b.num)))
+      pos: int(false, mul_nat(neg_to_nat(a.num), pos_to_nat(b.num)))
+    }
+    pos: case b {
+      neg: int(false, mul_nat(pos_to_nat(a.num), neg_to_nat(b.num)))
+      pos: int(true, mul_nat(pos_to_nat(a.num), pos_to_nat(b.num)))
+    }
+  }
+
+mul_nat(a: Nat, b: Nat): Nat
+  case a {
+    zero: Nat.zero
+    succ: case b {
+      zero: Nat.zero
+      succ: add_nat(b, mul_nat(a.pred, b))
+    }
+  }
+
+add_nat(a: Nat, b: Nat): Nat
+  case a {
+    zero: b
+    succ: case b {
+      zero: a
+      succ: Nat.succ(add_nat(a.pred, b))
+    }
+  }
+
+// Subtracts two Integers
+// int(false, 6) - int(false, 6) = +0
+// int(false, 4) - int(false, 6) = +2
+sub(a: Inte, b: Inte): Inte
+  case b {
+    neg: add(a, int(true, neg_to_nat(b.num)))
+    pos:add(a, int(false, pos_to_nat(b.num)))
+  }
+
+// Equal
+eql(a: Inte, b: Inte): Bool // Given two Integers, returns true if both are the same and false otherwise.
+  case a {
+    neg: case b {
+      neg: case a.num {
+        one: case b.num {
+          one: Bool.true
+          pred: Bool.false
+        }
+        pred: case b.num {
+          one: Bool.false
+          pred: eql(Inte.neg(a.num.succ), Inte.neg(b.num.succ))
+        }
+      }
+      pos: Bool.false
+    }
+    pos: case b {
+      neg: Bool.false
+      pos: case a.num {
+        zero: case b.num {
+          zero: Bool.true
+          succ: Bool.false
+        }
+        succ: case b.num {
+          zero: Bool.false
+          succ: eql(Inte.pos(a.num.pred), Inte.pos(b.num.pred))
+        }
+      }
+    }
+  }
+
+
+// Greater than
+// int(false, 2) > int(false, 5) = True
+// int(false, 5) > int(false, 1) = False
+// int(false, 2) > int(true,  0) = False
+// int(true,  0) > int(false, 2) = True
+gtn(a: Inte, b: Inte): Bool // if A > B then True else false
+  case a {
+    neg: case b {
+      neg: case a.num {
+        one: case b.num {
+          one: Bool.false
+          pred: Bool.true
+        }
+        pred: case b.num {
+          one: Bool.false
+          pred: gtn(Inte.neg(a.num.succ), Inte.neg(b.num.succ))
+        }
+      }
+      pos: Bool.false
+    }
+    pos: case b {
+      neg: Bool.true
+      pos: case a.num {
+        zero: Bool.false
+        succ: case b.num {
+          zero: Bool.true
+          succ: gtn(Inte.pos(a.num.pred), Inte.pos(b.num.pred))
+        }
+      }
+    }
+  }
+
+// Lower than
+// int(false, 1) < int(true,  0) = True
+// int(true,  0) < int(false, 1) = False
+ltn(a: Inte, b: Inte): Bool // if A > B then False else true
+  case a {
+    neg: case b {
+      neg: case a.num {
+        one: Bool.false
+        pred: case b.num {
+          one: Bool.true
+          pred: ltn(Inte.neg(a.num.succ), Inte.neg(b.num.succ))
+        }
+      }
+      pos: Bool.true
+    }
+    pos: case b {
+      neg: Bool.false
+      pos: case a.num {
+        zero: case b.num {
+          zero: Bool.false
+          succ: Bool.true
+        }
+        succ: case b.num {
+          zero: Bool.false
+          succ: ltn(Inte.pos(a.num.pred), Inte.pos(b.num.pred))
+        }
+      }
+    }
+  }
+
+// Minimum
+// min(int(false, 1), int(true,  0)  = -1
+// min(int(false, 1), int(false, 3)) = -3
+min(a: Inte, b: Inte): Inte // if A < B then A else B
+  case ltn(a, b) {
+    true: a
+    false: b
+  }
+
+// Maximum
+// max(int(false, 1), int(true,  0)) = +0
+// max(int(false, 1), int(false, 3)) = -1
+max(a: Inte, b: Inte): Inte // if A > B then A else B
+  case gtn(a, b) {
+    true: a
+    false: b
+  }
+
+// Half
+// Divides an Integer by two
+// int(false, 4) = -2
+// int(false, 1) = +0
+// int(true,  6) = +3
+hlf(a: Inte): Inte
+  let posTwo = int(true, 2)
+  case a {
+    neg: case gtn(a, int(false, 2)) {
+      true: int(true, 0)
+      false: add(int(false, 1), hlf(add(a, posTwo)))
+    }
+    pos: case ltn(a, posTwo) {
+      true: int(true, 0)
+      false: add(int(true, 1), hlf(sub(a, posTwo)))
+    }
+  }
+
+// Division
+// int(true,  2)  / int(true,  2)  = +1
+// int(false, 8)  / int(true,  4)  = -2
+// int(false, 11) / int(false, 5)  = +2
+// int(true,  10) / int(false, 12) = +0
+div(a: Inte, b: Inte): Inte
+  case a {
+    neg: case b {
+      neg: int(true, div_nat(neg_to_nat(a.num), neg_to_nat(b.num)))
+      pos: int(false, div_nat(neg_to_nat(a.num), pos_to_nat(b.num)))
+    }
+    pos: case b {
+      neg: int(false, div_nat(pos_to_nat(a.num), neg_to_nat(b.num)))
+      pos: int(true, div_nat(pos_to_nat(a.num), pos_to_nat(b.num)))
+    }
+  }
+
+div_nat(a: Nat, b: Nat): Nat
+  case ltn_nat(a, b) {
+    true: Nat.zero
+    false: case a {
+      zero: Nat.zero
+      succ: case b {
+        zero: Nat.zero
+        succ: Nat.succ(div_nat(sub_nat(a, b), b))
+      }
+    }
+  }
+
+ltn_nat(a: Nat, b: Nat): Bool
+  case a {
+    zero: case b {
+      zero: Bool.false
+      succ: Bool.true
+    }
+    succ: case b {
+      zero: Bool.false
+      succ: ltn_nat(a.pred, b.pred)
+    }
+  }
+
+sub_nat(a: Nat, b: Nat): Nat
+  case a {
+    zero: Nat.zero
+    succ: case b {
+      zero: a
+      succ: sub_nat(a.pred, b.pred)
+    }
+  }
+
+ex_06: _
+
+  let negOne = int(false, 1)
+  let negTwo = int(false, 2)
+  let negFour = int(false, 4)
+  let negFive = int(false, 5)
+  let negSix = int(false, 6)
+  let negEight = int(false, 8)
+  let negEleven = int(false, 11)
+  let negTwelve = int(false, 12)
+  let posZero = int(true, 0)
+  let posTwo = int(true, 2)
+  let posThree = int(true, 3)
+  let posFour = int(true, 4)
+  let posSix = int(true, 6)
+  let posTen = int(true, 10)
+
+// div
+  // inte_show(div(posTwo, posTwo)) // +1
+  // inte_show(div(negEight, posFour)) // -2
+  // inte_show(div(negEleven, negFive)) // +2
+  // inte_show(div(posTen, negTwelve)) // +0
+
+// hlf
+  // inte_show(hlf(negFour)) // -2
+  // inte_show(hlf(negOne)) // +0
+  // inte_show(hlf(posSix)) // +3
+
+// min
+  // inte_show(min(negOne, posZero)) // -1
+  // inte_show(min(negOne, negFive)) // -5
+
+// max
+  // inte_show(max(negOne, posZero)) // +0
+  // inte_show(max(negOne, negFive)) // -1
+
+// ltn
+  // ltn(negTwo, negFive) // false
+  // ltn(posThree, posThree) // false
+  // ltn(negFive, negOne) // true
+  // ltn(negTwo, posZero) // true
+  // ltn(posZero, negTwo) // false
+
+// gtn
+  // gtn(negTwo, negFive) // true
+  // gtn(posThree, posThree) // false
+  // gtn(negFive, negOne) // false
+  // gtn(negTwo, posZero) // false
+  // gtn(posZero, negTwo) // true
+
+// equal
+  // eql(negSix, negSix) // true
+  // eql(negFour, posThree) // false
+  // eql(negFour, negFive) // false
+  // eql(posThree, posTwo) // false
+  // eql(posTwo, negFive) // false
+  // eql(posThree, posThree) // true
+
+// sub
+  // inte_show(sub(negSix, negSix)) // +0
+  // inte_show(sub(negFour, negSix)) // +2
+
+// mul
+  // inte_show(mul(negTwo, posThree)) // -6
+  // inte_show(mul(negFour, negFive))  // +20
+  // inte_show(mul(posZero, negFive)) // +0
+  // inte_show(mul(posTwo, posThree)) // +6
+  // inte_show(mul(posTwo, negOne)) // -2
+
+// add
+  // inte_show(add(negFour, negTwo)) // -6
+  // inte_show(add(negFour, posTwo))  // -2
+  // inte_show(add(posTwo, posZero)) // +2
+  // inte_show(add(posTwo, negOne)) // +1
+  // inte_show(add(posTwo, posTwo)) // +4
+
+// double
+  // inte_show(dbl(negFour)) // -8
+  // inte_show(dbl(negOne)) // -2
+  // inte_show(dbl(posTwo)) // +4
+
+// inc
+  // inte_show(inc(negOne)) // +0
+  // inte_show(inc(negTwo)) // -1
+  // inte_show(inc(posTwo)) // +3
+
+// dec
+// inte_show(dec(negOne)) // -2
+// inte_show(dec(posTwo)) // +1
+// inte_show(dec(posZero)) // -1

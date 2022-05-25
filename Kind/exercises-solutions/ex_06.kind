@@ -390,93 +390,19 @@ sub_nat(a: Nat, b: Nat): Nat
     }
   }
 
-ex_06: _
-
-  let negOne = int(false, 1)
-  let negTwo = int(false, 2)
-  let negFour = int(false, 4)
-  let negFive = int(false, 5)
-  let negSix = int(false, 6)
-  let negEight = int(false, 8)
-  let negEleven = int(false, 11)
-  let negTwelve = int(false, 12)
-  let posZero = int(true, 0)
-  let posTwo = int(true, 2)
-  let posThree = int(true, 3)
-  let posFour = int(true, 4)
-  let posSix = int(true, 6)
-  let posTen = int(true, 10)
-
-// div
-  // inte_show(div(posTwo, posTwo)) // +1
-  // inte_show(div(negEight, posFour)) // -2
-  // inte_show(div(negEleven, negFive)) // +2
-  // inte_show(div(posTen, negTwelve)) // +0
-
-// hlf
-  // inte_show(hlf(negFour)) // -2
-  // inte_show(hlf(negOne)) // +0
-  // inte_show(hlf(posSix)) // +3
-
-// min
-  // inte_show(min(negOne, posZero)) // -1
-  // inte_show(min(negOne, negFive)) // -5
-
-// max
-  // inte_show(max(negOne, posZero)) // +0
-  // inte_show(max(negOne, negFive)) // -1
-
-// ltn
-  // ltn(negTwo, negFive) // false
-  // ltn(posThree, posThree) // false
-  // ltn(negFive, negOne) // true
-  // ltn(negTwo, posZero) // true
-  // ltn(posZero, negTwo) // false
-
-// gtn
-  // gtn(negTwo, negFive) // true
-  // gtn(posThree, posThree) // false
-  // gtn(negFive, negOne) // false
-  // gtn(negTwo, posZero) // false
-  // gtn(posZero, negTwo) // true
-
-// equal
-  // eql(negSix, negSix) // true
-  // eql(negFour, posThree) // false
-  // eql(negFour, negFive) // false
-  // eql(posThree, posTwo) // false
-  // eql(posTwo, negFive) // false
-  // eql(posThree, posThree) // true
-
-// sub
-  // inte_show(sub(negSix, negSix)) // +0
-  // inte_show(sub(negFour, negSix)) // +2
-
-// mul
-  // inte_show(mul(negTwo, posThree)) // -6
-  // inte_show(mul(negFour, negFive))  // +20
-  // inte_show(mul(posZero, negFive)) // +0
-  // inte_show(mul(posTwo, posThree)) // +6
-  // inte_show(mul(posTwo, negOne)) // -2
-
-// add
-  // inte_show(add(negFour, negTwo)) // -6
-  // inte_show(add(negFour, posTwo))  // -2
-  // inte_show(add(posTwo, posZero)) // +2
-  // inte_show(add(posTwo, negOne)) // +1
-  // inte_show(add(posTwo, posTwo)) // +4
-
-// double
-  // inte_show(dbl(negFour)) // -8
-  // inte_show(dbl(negOne)) // -2
-  // inte_show(dbl(posTwo)) // +4
-
-// inc
-  // inte_show(inc(negOne)) // +0
-  // inte_show(inc(negTwo)) // -1
-  // inte_show(inc(posTwo)) // +3
-
-// dec
-// inte_show(dec(negOne)) // -2
-// inte_show(dec(posTwo)) // +1
-// inte_show(dec(posZero)) // -1
+ex_06: IO<Unit>
+  IO {
+    Tests._06.inc(inc)
+    Tests._06.dec(dec)
+    Tests._06.dbl(dbl)
+    Tests._06.add(add)
+    Tests._06.mul(mul)
+    Tests._06.sub(sub)
+    Tests._06.eql(eql)
+    Tests._06.gtn(gtn)
+    Tests._06.ltn(ltn)
+    Tests._06.min(min)
+    Tests._06.max(max)
+    Tests._06.hlf(hlf)
+    Tests._06.div(div)
+  }

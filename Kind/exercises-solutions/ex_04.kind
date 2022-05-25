@@ -150,102 +150,18 @@ div(a: Nat, b: Nat): Nat
     }
   }
 
-ex_04: _
-
-// min
-  // let min1 = min(Nat.zero, Nat.succ(Nat.zero)) // 0
-  // let min2 = min(Nat.succ(Nat.zero), Nat.succ(Nat.succ(Nat.zero))) // 1
-  // let min3 = min(Nat.succ(Nat.succ(Nat.zero)), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // 2
-  // let min4 = min(Nat.succ(Nat.succ((Nat.succ(Nat.succ(Nat.zero))))), Nat.succ(Nat.zero)) // 1
-
-  // List.show!(Nat.show [min1, min2, min3, min4])
-
-// max
-  // let max1 = max(Nat.zero, Nat.succ(Nat.zero)) // 1
-  // let max2 = max(Nat.succ(Nat.zero), Nat.succ(Nat.succ(Nat.zero))) // 2
-  // let max3 = max(Nat.succ(Nat.succ(Nat.zero)), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // 3
-  // let max4 = max(Nat.succ(Nat.succ((Nat.succ(Nat.succ(Nat.zero))))), Nat.succ(Nat.zero)) // 4
-
-  // List.show!(Nat.show [max1, max2, max3, max4])
-
-// half
-// 2 / 2 = 1
-// 5 / 2 = 2
-// 1 / 2 = 0
-  let hlf1 = hlf(Nat.succ(Nat.succ(Nat.zero))) // 1
-  let hlf2 = hlf(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.zero)))))) // 2
-  let hlf3 = hlf(Nat.succ(Nat.zero)) // 0
-
-  List.show!(Nat.show [hlf1, hlf2, hlf3])
-
-// double
-  // let dbl1 = dbl(Nat.zero) // 0
-  // let dbl2 = dbl(Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // 6
-  // let dbl3 = dbl(Nat.succ(Nat.succ(Nat.zero))) // 4
-
-  // List.show!(Nat.show [dbl1, dbl2, dbl3])
-
-// add
-  // let add1 = add(Nat.zero, Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // 3
-  // let add2 = add(Nat.succ(Nat.succ(Nat.zero)), Nat.zero) // 2
-  // let add3 = add(Nat.succ(Nat.succ(Nat.zero)), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // 5
-  // let add4 = add(Nat.succ(Nat.succ(Nat.succ(Nat.zero))), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // 6
-
-  // List.show!(Nat.show [add1, add2, add3, add4])
-
-// multiplication
-  // let mul1 = mul(Nat.succ(Nat.succ(Nat.succ(Nat.zero))), Nat.zero) // 0
-  // let mul2 = mul(Nat.succ(Nat.succ(Nat.zero)), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // 6
-  // let mul3 = mul(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.zero)))), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // 12
-
-  // List.show!(Nat.show [mul1, mul2, mul3, mul4])
-
-// subtraction
-
-  // let sub1 = sub(Nat.zero, Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // 0
-  // let sub2 = sub(Nat.succ(Nat.succ(Nat.zero)), Nat.zero) // 2
-  // let sub3 = sub(Nat.succ(Nat.succ(Nat.zero)), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // 0
-  // let sub4 = sub(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.zero)))), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // 1
-  // let sub5 = sub(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.zero))))))), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // 4
-
-  // List.show!(Nat.show [sub1, sub2, sub3, sub4, sub5])
-
-// factorial
-  // let fac1 = fac(Nat.zero) // 1
-  // let fac2 = fac(Nat.succ(Nat.zero)) // 1
-  // let fac3 = fac(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.zero)))))))) // 5040
-
-  // List.show!(Nat.show [fac1, fac2, fac3, fac4, fac5])
-
-// division
-  // let six = Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.zero))))))
-  // let div1 = div(six, six) // 1 <-
-  // let div2 = div(Nat.succ(Nat.zero), six) // 0
-  // let div3 = div(Nat.zero, six) // 0
-  // let div4 = div(six, Nat.zero) // 0
-  // let div5 = div(six, Nat.succ(Nat.zero)) // 6
-  // let div6 = div(dbl(six), div(six, 2)) // 4
-  // let div7 = div(add(dbl(six), six), sub(six, Nat.succ(Nat.zero))) // 3
-
-  // List.show!(Nat.show [div1, div2, div3, div4, div5, div6, div7])
-
-// equal
-  // let eql1 = eql(Nat.zero, Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // false
-  // let eql2 = eql(Nat.succ(Nat.succ(Nat.succ(Nat.zero))), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // true
-  // let eql3 = eql(Nat.succ(Nat.succ(Nat.zero)), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // false
-
-  // List.show!(Bool.show [eql1, eql2, eql3])
-
-// greater than
-  // let gtn1 = gtn(Nat.zero, Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // false
-  // let gtn2 = gtn(Nat.succ(Nat.succ(Nat.succ(Nat.zero))), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // false
-  // let gtn3 = gtn(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.zero)))), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // true
-
-  // List.show!(Bool.show [gtn1, gtn2, gtn3])
-
-// lower than
-  // let ltn1 = ltn(Nat.succ(Nat.zero), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // true
-  // let ltn2 = ltn(Nat.succ(Nat.succ(Nat.succ(Nat.zero))), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // false
-  // let ltn3 = ltn(Nat.succ(Nat.succ(Nat.succ(Nat.succ(Nat.zero)))), Nat.succ(Nat.succ(Nat.succ(Nat.zero)))) // false
-
-  // List.show!(Bool.show [ltn1, ltn2, ltn3])
+ex_04: IO<Unit>
+  IO {
+    Tests._04.dbl(dbl)
+    Tests._04.add(add)
+    Tests._04.mul(mul)
+    Tests._04.sub(sub)
+    Tests._04.fac(fac)
+    Tests._04.eql(eql)
+    Tests._04.gtn(gtn)
+    Tests._04.ltn(ltn)
+    Tests._04.min(min)
+    Tests._04.max(max)
+    Tests._04.hlf(hlf)
+    Tests._04.div(div)
+  }

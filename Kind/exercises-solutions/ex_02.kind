@@ -74,30 +74,14 @@ swap(pair: PairBool): PairBool
     new: PairBool.new(pair.snd, pair.fst)
   }
 
-ex_02: _
-  let a1 = fst(PairBool.new(Bool.true, Bool.false)) // true
-  let a2 = fst(PairBool.new(Bool.false, Bool.true)) // false
-  let b1 = snd(PairBool.new(Bool.true, Bool.false)) // false
-  let b2 = snd(PairBool.new(Bool.false, Bool.true)) // true
-  let c1 = eql_elements(PairBool.new(Bool.false, Bool.true)) // false
-  let c2 = eql_elements(PairBool.new(Bool.true, Bool.false)) // false
-  let c3 = eql_elements(PairBool.new(Bool.false, Bool.false)) // true
-  let c4 = eql_elements(PairBool.new(Bool.true, Bool.true)) // true
-  let d1 = eql(PairBool.new(false, false), PairBool.new(true, true)) // false 
-  let d2 = eql(PairBool.new(true, false), PairBool.new(true, false)) // true
-  let d3 = eql(PairBool.new(true, true), PairBool.new(true, true)) // true 
-  let d4 = eql(PairBool.new(false, true), PairBool.new(false, false)) // false
-  let e1 = xor(PairBool.new(false, false), PairBool.new(true, true)) // true 
-  let e2 = xor(PairBool.new(true, false), PairBool.new(true, false)) // false
-  let e3 = xor(PairBool.new(true, true), PairBool.new(true, true)) // false
-  let e4 = xor(PairBool.new(false, true), PairBool.new(false, false)) // true
-  let f = create(Bool.true, Bool.false) // PairBool.new(Bool.true, Bool.false)
-  let g1 = neg(PairBool.new(false, true)) // PairBool.new(true, false)
-  let g2 = neg(PairBool.new(false, false)) // PairBool.new(true, true)
-  let h = swap(PairBool.new(false, true)) // PairBool.new(true, false)
-
-  // List.show!(Bool.show [a1, a2, b1, b2, c1, c2, c3, c4, d1, d2, d3, d4, e1, e2, e3, e4])
-  // f
-  // g1
-  // g2
-  h
+ex_02: IO<Unit>
+  IO {
+    Tests._02.fst(fst)
+    Tests._02.snd(snd)
+    Tests._02.eql_elements(eql_elements)
+    Tests._02.eql(eql)
+    Tests._02.not_eql(not_eql)
+    Tests._02.create(create)
+    Tests._02.neg(neg)
+    Tests._02.swap(swap)
+  }

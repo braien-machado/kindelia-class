@@ -82,22 +82,17 @@ xnor(a: Bool, b: Bool): Bool
     false: neg(b)
   }
 
-ex_00:_
-  let a = is_true(true) // true
-  let b = is_false(false) // true
-  let c1 = neg(false) // true
-  let c2 = neg(true) // false
-  let d = and(true, true) // true
-  let e1 = or(true, false) //true
-  let e2 = or(true, true) // true
-  let e3 = or(false, true) // true
-  let f1 = eql(true, true) // true
-  let f2 = eql(false, false) // true
-  let g1 = xor(true, false) // true
-  let g2 = xor(false, true) // true
-  let h = nor(false, false) // true
-  let i = nand(true, true) // false
-  let j1 = xnor(true, true) // true
-  let j2 = xnor(false, false) // true
+ex_00: IO<Unit>
+  IO {
+    Tests._00.is_true(is_true)
+    Tests._00.is_false(is_false)
+    Tests._00.neg(neg)
+    Tests._00.and(and)
+    Tests._00.or(or)
+    Tests._00.eql(eql)
+    Tests._00.xor(xor)
+    Tests._00.nor(nor)
+    Tests._00.nand(nand)
+    Tests._00.xnor(xnor)
+  }
 
-  List.show!(Bool.show [a, b, c1, c2, d, e1, e2, e3, f1, f2, g1, g2, h, i, j1, j2])

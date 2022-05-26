@@ -16,7 +16,6 @@ type Bits {
 //c = Bits.o(Bits.o(Bits.i(Bits.i(Bits.e))))
 //d = Bits.i(Bits.i(Bits.i(Bits.i(Bits.e))))
 
-
 //Verifies if it is an Empty Bit
 
 //is_empty(a)      -> Bool.false
@@ -40,7 +39,6 @@ tail(b: Bits): Bits
     e: Bits.e
   } default b.pred
 
-
 //Negates all Bits
 
 //notb(a) -> Bits.o(Bits.o(Bits.e))
@@ -48,10 +46,11 @@ tail(b: Bits): Bits
 //notb(c) -> Bits.i(Bits.i(Bits.o(Bits.o(Bits.e))))
 //notb(d) -> Bits.o(Bits.o(Bits.o(Bits.o(Bits.e))))
 notb(b: Bits): Bits
-  ?notb
-
-
-
+  case b {
+    e: Bits.e
+    o: Bits.i(notb(b.pred))
+    i: Bits.o(notb(b.pred))
+  }
 
 //Increments a Bit
 
@@ -60,9 +59,13 @@ notb(b: Bits): Bits
 //inc(c) -> Bits.i(Bits.o(Bits.i(Bits.i(Bits.e))))
 //inc(d) -> Bits.o(Bits.o(Bits.o(Bits.o(Bits.i(Bits.e)))))
 inc(b: Bits): Bits
-  ?inc
-
-
+  case b {
+    e: Bits.o(b)
+    o: Bits.i(b.pred)
+    i: case b.pred {
+      e: Bits.o(b)
+    } default Bits.o(inc(b.pred))
+  }
 
 //Decrements a Bit
 
@@ -93,10 +96,13 @@ dec(b: Bits): Bits
 //concat(a,b) -> Bits.i(Bits.i(Bits.o(Bits.i(Bits.i(Bits.e)
 //concat(b,c) -> Bits.o(Bits.i(Bits.i(Bits.o(Bits.o(Bits.i(Bits.i(Bits.e)))))))
 //concat(c,d) -> Bits.o(Bits.o(Bits.i(Bits.i(Bits.i(Bits.i(Bits.i(Bits.i(Bits.e))))))))
+// 11 11 => 1111
 concat(a: Bits, b: Bits): Bits
-  ?concat
-
-
+  case a {
+    e: b
+    o: Bits.o(concat(a.pred, b))
+    i: Bits.i(concat(a.pred, b))
+  }
 
 //Adds two Bits structures
 
@@ -106,17 +112,23 @@ concat(a: Bits, b: Bits): Bits
 add(a: Bits, b: Bits): Bits 
   ?add
 
-
-
 //Returns Bits.i if only both bits are Bits.i
 
 //and(a,b) -> Bits.o(Bits.i(Bits.e))
 //and(b,c) -> Bits.o(Bits.o(Bits.i(Bits.e)))
 //and(c,d) -> Bits.o(Bits.o(Bits.i(Bits.i(Bits.e))))
 and(a: Bits, b: Bits): Bits
-  ?and
-
-
+  case a {
+    e: Bits.e
+    o: case b {
+      e: Bits.e
+    } default Bits.o(and(a.pred, b.pred))
+    i: case b {
+      e: Bits.e
+      o: Bits.o(and(a.pred, b.pred))
+      i: Bits.i(and(a.pred, b.pred))
+    }
+  }
 
 //Returns Bits.i if any of bits are Bits.i
 
@@ -126,8 +138,6 @@ and(a: Bits, b: Bits): Bits
 or(a: Bits, b: Bits): Bits
   ?or
 
-
-
 //Verifies if both Bit structures are equal
 
 //eql(a,b) -> Bool.false
@@ -136,14 +146,10 @@ or(a: Bits, b: Bits): Bits
 eql(a: Bits, b: Bits): Bool
   ?eql
 
-
-
 //Reverses a Bits structure
 
 reverse_go(b: Bits, acum: Bits): Bits
   ?reverse_go
-  
-
 
 //reverse(a) -> Bits.i(Bits.i(Bits.e))
 //reverse(b) -> Bits.i(Bits.i(Bits.o(Bits.e)))
@@ -152,16 +158,10 @@ reverse_go(b: Bits, acum: Bits): Bits
 reverse(b: Bits): Bits
   reverse_go(b, Bits.e)
 
-
-
-
 //Gets the length of the Bits structure
 
 length_go(bs: Bits, acum: Nat): Nat
   ?length_go
-
-
-
 
 //length(a) -> Nat.succ(Nat.succ(Nat.zero))
 //length(b) -> Nat.succ(Nat.succ(Nat.succ(Nat.zero)))
@@ -193,8 +193,6 @@ mul(a: Bits, b: Bits): Bits
 //drop(1, d) -> Bits.i(Bits.i(Bits.i(Bits.e)))
 drop(n: Nat, bs: Bits): Bits
   ?drop
-  
-
 
 //Takes n Bits from the structure, starting from the least significative bit
 
@@ -209,10 +207,10 @@ ex_07: IO<Unit>
   IO {
     Tests._07.is_empty(is_empty)
     Tests._07.tail(tail)
-    // Tests._07.not(notb)
-    // Tests._07.inc(inc)
+    Tests._07.not(notb)
+    Tests._07.inc(inc)
     Tests._07.dec(dec)
-    // Tests._07.concat(concat)
+    Tests._07.concat(concat)
     // Tests._07.add(add)
     // Tests._07.and(and)
     // Tests._07.eql(eql)

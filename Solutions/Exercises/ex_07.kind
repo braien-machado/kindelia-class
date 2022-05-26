@@ -28,6 +28,24 @@ is_empty(b: Bits): Bool
     e: Bool.true
   } default Bool.false
 
+// format value to remove zeros from end
+remove_additional_zeros(b: Bits): Bits
+  case b {
+    e: Bits.e
+    o: case is_gtn_zero(b.pred) {
+      false: Bits.e
+      true: Bits.o(remove_additional_zeros(b.pred))
+    }
+    i: Bits.i(remove_additional_zeros(b.pred))
+  }
+
+// verify if sequence has at least one Bits.i value
+is_gtn_zero(b: Bits): Bool
+  case b {
+    e: Bool.false
+    o: is_gtn_zero(b.pred)
+    i: Bool.true
+  }
 //Gets the Tail of a Bits structure
 
 //tail(a) -> Bits.i(Bits.e)
@@ -83,12 +101,13 @@ dec_aux(b: Bits): Bits
   }
 
 dec(b: Bits): Bits
-  case b {
+  let bc = remove_additional_zeros(b)
+  case bc {
     e: Bits.e
-    o: case b.pred {
+    o: case bc.pred {
       e: Bits.e
-    } default Bits.i(dec_aux(b.pred))
-    i: Bits.o(b.pred)
+    } default Bits.i(dec_aux(bc.pred))
+    i: Bits.o(bc.pred)
   }
 
 //Concatenate two Bits structures
@@ -109,6 +128,7 @@ concat(a: Bits, b: Bits): Bits
 //add(a,b) -> Bits.i(Bits.o(Bits.o(Bits.i(Bits.e))))
 //add(b,c) -> Bits.o(Bits.i(Bits.o(Bits.o(Bits.i(Bits.o(Bits.e))))))
 //add(c,d) -> Bits.i(Bits.i(Bits.o(Bits.i(Bits.i(Bits.e)))))
+
 add(a: Bits, b: Bits): Bits
   case a {
     e: b
@@ -213,20 +233,33 @@ length_go(bs: Bits, acum: Nat): Nat
 length(bs: Bits): Nat
   length_go(bs, 0)
 
-
-
 //Multiplies two Bits structures
 
-mul_go(a: Bits, b: Bits, acum: Bits): Bits
-  ?mul_go
+is_zero(a: Bits) : Bool
+  case a {
+    o: case a.pred {
+      e: Bool.true
+    } default Bool.false
+  } default Bool.false
 
+mul_go(a: Bits, b: Bits, acum: Bits): Bits
+  case a {
+    e: acum
+    o: case a.pred {
+      e: acum
+    } default mul_go(dec(a), b, add(acum, b))
+  } default mul_go(dec(a), b, add(acum, b))
 
 //mul(a,b) -> Bits.o(Bits.i(Bits.o(Bits.o(Bits.i(Bits.e)))))
 //mul(b,c) -> Bits.o(Bits.o(Bits.o(Bits.i(Bits.o(Bits.o(Bits.i(Bits.e)))))))
 mul(a: Bits, b: Bits): Bits
-  mul_go(a, b, Bits.e)
-
-
+  case is_zero(a) {
+    true: Bits.o(Bits.e)
+    false: case is_zero(b) {
+      true: Bits.o(Bits.e)
+      false: mul_go(a, b, Bits.e)
+    }
+  }
 
 //Drops a n Number of Bits starting from the least significative bit
 
@@ -274,7 +307,7 @@ ex_07: IO<Unit>
     Tests._07.eql(eql)
     Tests._07.reverse(reverse)
     Tests._07.length(length)
-    // Tests._07.mul(mul)
+    Tests._07.mul(mul)
     Tests._07.drop(drop)
     Tests._07.take(take)
   }

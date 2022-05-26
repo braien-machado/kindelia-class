@@ -60,7 +60,7 @@ notb(b: Bits): Bits
 //inc(d) -> Bits.o(Bits.o(Bits.o(Bits.o(Bits.i(Bits.e)))))
 inc(b: Bits): Bits
   case b {
-    e: Bits.o(b)
+    e: Bits.i(b)
     o: Bits.i(b.pred)
     i: case b.pred {
       e: Bits.o(b)
@@ -109,8 +109,24 @@ concat(a: Bits, b: Bits): Bits
 //add(a,b) -> Bits.i(Bits.o(Bits.o(Bits.i(Bits.e))))
 //add(b,c) -> Bits.o(Bits.i(Bits.o(Bits.o(Bits.i(Bits.o(Bits.e))))))
 //add(c,d) -> Bits.i(Bits.i(Bits.o(Bits.i(Bits.i(Bits.e)))))
-add(a: Bits, b: Bits): Bits 
-  ?add
+add(a: Bits, b: Bits): Bits
+  case a {
+    e: b
+    o: case a.pred {
+      e: case b {
+        e: a
+      } default b
+      o: case b {
+        e: a
+      } default add(dec(a), inc(b))
+      i:  case b {
+        e: a
+      } default add(dec(a), inc(b))
+    }
+    i: case b {
+      e: a
+    } default add(dec(a), inc(b))
+  }
 
 //Returns Bits.i if only both bits are Bits.i
 
@@ -252,7 +268,7 @@ ex_07: IO<Unit>
     Tests._07.inc(inc)
     Tests._07.dec(dec)
     Tests._07.concat(concat)
-    // Tests._07.add(add)
+    Tests._07.add(add)
     Tests._07.and(and)
     Tests._07.or(or)
     Tests._07.eql(eql)

@@ -170,7 +170,11 @@ eql(a: Bits, b: Bits): Bool
 //Reverses a Bits structure
 
 reverse_go(b: Bits, acum: Bits): Bits
-  ?reverse_go
+  case b {
+    e: acum
+    o: reverse_go(b.pred, Bits.o(acum))
+    i: reverse_go(b.pred, Bits.i(acum))
+  }
 
 //reverse(a) -> Bits.i(Bits.i(Bits.e))
 //reverse(b) -> Bits.i(Bits.i(Bits.o(Bits.e)))
@@ -182,7 +186,9 @@ reverse(b: Bits): Bits
 //Gets the length of the Bits structure
 
 length_go(bs: Bits, acum: Nat): Nat
-  ?length_go
+  case bs {
+    e: acum
+  } default length_go(bs.pred, Nat.succ(acum))
 
 //length(a) -> Nat.succ(Nat.succ(Nat.zero))
 //length(b) -> Nat.succ(Nat.succ(Nat.succ(Nat.zero)))
@@ -236,8 +242,8 @@ ex_07: IO<Unit>
     Tests._07.and(and)
     Tests._07.or(or)
     Tests._07.eql(eql)
-    // Tests._07.reverse(reverse)
-    // Tests._07.length(length)
+    Tests._07.reverse(reverse)
+    Tests._07.length(length)
     // Tests._07.mul(mul)
     // Tests._07.drop(drop)
     // Tests._07.take(take)

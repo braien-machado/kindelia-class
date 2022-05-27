@@ -90,23 +90,17 @@ reverse<A: Type>(xs: List<A>): List<A>
   reverse.go<A>(List.nil<A>, xs)
 
 reverse.go<A: Type>(new_list: List<A>, old_list: List<A>): List<A>
-  ?r
+  case old_list {
+    nil: new_list
+    cons: reverse.go<A>(List.cons<A>(old_list.head, new_list), old_list.tail)
+  }
 
 // Shows list in a prettier way
 // List.show<T>(T.show, List<T>)
 
-show_elements_as_strings(xs: List<List<Nat>>): List<String>
-  case xs {
-    nil: List.cons<String>(List.show<Nat>(Nat.show, List.nil<Nat>), List.nil<String>)
-    cons: case xs.tail {
-      nil: List.cons<String>(List.show<Nat>(Nat.show, xs.head), List.nil<String>)
-      cons: List.cons<String>(List.show<Nat>(Nat.show, xs.head), show_elements_as_strings(xs.tail))
-    }
-  }
+// Shows list of lists (matrix)
+// List.show<List<T>>(List.show<T>(T.show))(matrix)
 
 ex_08: _
-  let list = [0,1,2]
-  let list2 = [3,4,5]
-  let listOfLists = [list, list2]
-  let mappedList = map<List<Nat>, List<Nat>>(tail<Nat>, listOfLists)
-  List.show<String>(String.show, show_elements_as_strings(mappedList))
+  let list = [1,2,3]
+  List.show!(Nat.show)(reverse<Nat>(list))

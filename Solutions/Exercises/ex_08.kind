@@ -80,7 +80,10 @@ take<A: Type>(n: Nat, xs: List<A>): List<A>
 
 // Applies a function to all elements of a list
 map<A: Type, B: Type>(fn: A -> B, xs: List<A>): List<B>
-  ?a
+  case xs {
+    nil: List.nil<B>
+    cons: List.cons<B>(fn(xs.head), map<A, B>(fn, xs.tail))
+  }
 
 // Returns the same list, with the order reversed
 reverse<A: Type>(xs: List<A>): List<A>
@@ -92,8 +95,18 @@ reverse.go<A: Type>(new_list: List<A>, old_list: List<A>): List<A>
 // Shows list in a prettier way
 // List.show<T>(T.show, List<T>)
 
+show_elements_as_strings(xs: List<List<Nat>>): List<String>
+  case xs {
+    nil: List.cons<String>(List.show<Nat>(Nat.show, List.nil<Nat>), List.nil<String>)
+    cons: case xs.tail {
+      nil: List.cons<String>(List.show<Nat>(Nat.show, xs.head), List.nil<String>)
+      cons: List.cons<String>(List.show<Nat>(Nat.show, xs.head), show_elements_as_strings(xs.tail))
+    }
+  }
+
 ex_08: _
-  let list = [1,2,3]
-  let list2 = [2,1]
-  List.show<Nat>(Nat.show, take<Nat>(10, list))
-  // init<Nat>(list)
+  let list = [0,1,2]
+  let list2 = [3,4,5]
+  let listOfLists = [list, list2]
+  let mappedList = map<List<Nat>, List<Nat>>(tail<Nat>, listOfLists)
+  List.show<String>(String.show, show_elements_as_strings(mappedList))

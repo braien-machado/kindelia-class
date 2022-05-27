@@ -13,31 +13,131 @@ type Maybe <A: Type> {
 // Returns pairs of the elements of the 2 input lists on the same index
 // Ex: zip!!([1,2], ["a","b","c"]) == [{1, "a"}, {2 , "b"}]
 // Ex: zip!!(["a", "b"], [3, 5])   == [{"a", 3}, {2 , "b"}]
+
 zip<A: Type, B: Type>(xs: List<A>, ys: List<B>): List<Pair<A,B>>
-  ?a
+  case xs {
+    nil: List.nil<Pair<A, B>>
+    cons: case ys {
+      nil: List.nil<Pair<A, B>>
+      cons: List.cons<Pair<A, B>>(Pair.new<A, B>(xs.head, ys.head), zip<A, B>(xs.tail, ys.tail))
+    }
+  }
 
 // Returns the smallest element of a List
+
+lte_nat(a: Nat, b: Nat): Bool
+  case a {
+    zero: Bool.true
+    succ: case b {
+      zero: Bool.false
+      succ: lte_nat(a.pred, b.pred)
+    }
+  }
+
+smallest.go(xs: List<Nat>, sm: Nat): Nat
+  case xs {
+    nil: sm
+    cons: case lte_nat(xs.head, sm) {
+      true: smallest.go(xs.tail, xs.head)
+      false: smallest.go(xs.tail, sm)
+    }
+  }
+
 smallest(xs: List<Nat>): Nat
-  ?s
+  case xs {
+    nil: Nat.zero
+    cons: smallest.go(xs.tail, xs.head)
+  }
 
 // Returns the same list without the smallest element
+
+eql_nat(a: Nat, b: Nat): Bool
+  case a b {
+    zero zero: Bool.true
+    succ succ: eql_nat(a.pred, b.pred)
+  } default Bool.false
+
+delete_smallest.go(xs: List<Nat>, sm: Nat): List<Nat>
+  case xs {
+    nil: List.nil<Nat>
+    cons: case eql_nat(sm, xs.head) {
+      true: delete_smallest.go(xs.tail, sm)
+      false: List.cons<Nat>(xs.head, delete_smallest.go(xs.tail, sm))
+    }
+  }
+
 delete_smallest(xs: List<Nat>): List<Nat>
-  ?d
+  let sm = smallest(xs)
+  delete_smallest.go(xs, sm)
 
 // Returns the same list, in ascending order
+
+delete_smallest_once(xs: List<Nat>, sm: Nat): List<Nat>
+  case xs {
+    nil: List.nil<Nat>
+    cons: case eql_nat(sm, xs.head) {
+      true: xs.tail
+      false: List.cons<Nat>(xs.head, delete_smallest_once(xs.tail, sm))
+    }
+  }
+
 sort_ascending(xs: List<Nat>): List<Nat>
-  ?a
+  let sm = smallest(xs)
+  case xs {
+    nil: List.nil<Nat>
+    cons: List.cons<Nat>(sm, sort_ascending(delete_smallest_once(xs, sm)))
+  }
 
 // Returns an element at an index from the list
 // if there is an element at that index
 //   returns Maybe.some!(element)
 // else
 //   returns Maybe.none!
+
+length<A: Type>(xs: List<A>): Nat
+  case xs {
+    nil: Nat.zero
+    cons: Nat.succ(length<A>(xs.tail))
+  }
+
+ltn_nat(a: Nat, b: Nat): Bool
+  case a b {
+    zero succ: Bool.true
+    succ succ: ltn_nat(a.pred, b.pred)
+  } default Bool.false
+
+get.go<A: Type>(idx: Nat, xs: List<A>, cur: Nat): Maybe<A>
+  case xs {
+    nil: Maybe.none<A>
+    cons: case eql_nat(idx, cur) {
+      false: get.go<A>(idx, xs.tail, Nat.succ(cur))
+      true: Maybe.some<A>(xs.head)
+    }
+  }
+
 get<A: Type>(idx: Nat, xs: List<A>): Maybe<A>
-  ?g
+  let len = length<A>(xs)
+  case ltn_nat(idx, len) {
+    true: get.go<A>(idx, xs, 0)
+    false: Maybe.none<A>
+  }
 
 // Removes all elements that does not match a condition
 // List.filter<Nat>(Nat.odd, [1, 2, 3, 4, 5]) = [1, 3, 5]
 filter<A: Type>(f: A -> Bool, xs: List<A>): List<A>
-  ?f
+  case xs {
+    nil: List.nil<A>
+    cons: case f(xs.head) {
+      true: List.cons<A>(xs.head, filter<A>(f, xs.tail))
+      false: filter<A>(f, xs.tail)
+    }
+  }
+
+ex_09: _
+  let listNat = [2,3,4]
+  let listString = ["a", "b", "c"]
+
+  // // Shows list of pairs
+  // List.show<Pair<Nat,String>>(Pair.show<Nat,String>(Nat.show, String.show), zip<Nat, String>(list1, list2))
   
+  List.show<Nat>(Nat.show, filter<Nat>(Nat.odd, listNat))

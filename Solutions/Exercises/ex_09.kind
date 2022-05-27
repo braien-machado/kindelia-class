@@ -125,7 +125,13 @@ get<A: Type>(idx: Nat, xs: List<A>): Maybe<A>
 // Removes all elements that does not match a condition
 // List.filter<Nat>(Nat.odd, [1, 2, 3, 4, 5]) = [1, 3, 5]
 filter<A: Type>(f: A -> Bool, xs: List<A>): List<A>
-  ?f
+  case xs {
+    nil: List.nil<A>
+    cons: case f(xs.head) {
+      true: List.cons<A>(xs.head, filter<A>(f, xs.tail))
+      false: filter<A>(f, xs.tail)
+    }
+  }
 
 ex_09: _
   let listNat = [2,3,4]
@@ -134,4 +140,4 @@ ex_09: _
   // // Shows list of pairs
   // List.show<Pair<Nat,String>>(Pair.show<Nat,String>(Nat.show, String.show), zip<Nat, String>(list1, list2))
   
-  Maybe.show!(Nat.show get<Nat>(0, listNat))
+  List.show<Nat>(Nat.show, filter<Nat>(Nat.odd, listNat))

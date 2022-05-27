@@ -21,7 +21,10 @@ tail<A: Type>(xs: List<A>): List<A>
 
 // Returns the length of a list
 length<A: Type>(xs: List<A>): Nat
-  ?a
+  case xs {
+    nil: Nat.zero
+    cons: Nat.succ(length<A>(xs.tail))
+  }
 
 // Returns the last element of a list
 last<A: Type>(xs: List<A>): Maybe<A>
@@ -60,5 +63,6 @@ reverse.go<A: Type>(new_list: List<A>, old_list: List<A>): List<A>
 // List.show<T>(T.show, List<T>)
 
 ex_08: _
-  let list = []
-  List.show<Nat>(Nat.show, tail<Nat>(list))
+  let list = [0,1,1,1,1,1,1,1]
+  // List.show<Nat>(Nat.show, length<Nat>(list))
+  length<Nat>(list)

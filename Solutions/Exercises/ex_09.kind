@@ -13,6 +13,7 @@ type Maybe <A: Type> {
 // Returns pairs of the elements of the 2 input lists on the same index
 // Ex: zip!!([1,2], ["a","b","c"]) == [{1, "a"}, {2 , "b"}]
 // Ex: zip!!(["a", "b"], [3, 5])   == [{"a", 3}, {2 , "b"}]
+
 zip<A: Type, B: Type>(xs: List<A>, ys: List<B>): List<Pair<A,B>>
   case xs {
     nil: List.nil<Pair<A, B>>
@@ -24,8 +25,29 @@ zip<A: Type, B: Type>(xs: List<A>, ys: List<B>): List<Pair<A,B>>
 
 // Returns the smallest element of a List
 
+lte_nat(a: Nat, b: Nat): Bool
+  case a {
+    zero: Bool.true
+    succ: case b {
+      zero: Bool.false
+      succ: lte_nat(a.pred, b.pred)
+    }
+  }
+
+smallest.go(xs: List<Nat>, sm: Nat): Nat
+  case xs {
+    nil: sm
+    cons: case lte_nat(xs.head, sm) {
+      true: smallest.go(xs.tail, xs.head)
+      false: smallest.go(xs.tail, sm)
+    }
+  }
+
 smallest(xs: List<Nat>): Nat
-  ?s
+  case xs {
+    nil: Nat.zero
+    cons: smallest.go(xs.tail, xs.head)
+  }
 
 // Returns the same list without the smallest element
 delete_smallest(xs: List<Nat>): List<Nat>
@@ -49,7 +71,9 @@ filter<A: Type>(f: A -> Bool, xs: List<A>): List<A>
   ?f
 
 ex_09: _
-  let list1 = [1,2]
-  let list2 = ["a", "b", "c"]
+  let listNat = []
+  let listString = ["a", "b", "c"]
 
-  List.show<Pair<Nat,String>>(Pair.show<Nat,String>(Nat.show, String.show), zip<Nat, String>(list1, list2))
+  // // Shows list of pairs
+  // List.show<Pair<Nat,String>>(Pair.show<Nat,String>(Nat.show, String.show), zip<Nat, String>(list1, list2))
+  Nat.show(smallest(listNat))

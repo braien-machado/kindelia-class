@@ -48,7 +48,13 @@ init<A: Type>(xs: List<A>): List<A>
 
 // Concatenates two lists
 concat<A: Type>(xs: List<A>, ys: List<A>): List<A>
-  ?a
+  case xs {
+    nil: ys
+    cons: case xs.tail {
+      nil: List.cons<A>(xs.head, ys)
+      cons: List.cons<A>(xs.head, concat<A>(xs.tail, ys))
+    }
+  }
 
 // Removes n elements from the start of the list
 // List.drop<Nat>(3, [1,2,3,4,5]) -> [4, 5]
@@ -75,6 +81,7 @@ reverse.go<A: Type>(new_list: List<A>, old_list: List<A>): List<A>
 // List.show<T>(T.show, List<T>)
 
 ex_08: _
-  let list = [1]
-  List.show<Nat>(Nat.show, init<Nat>(list))
+  let list = [1,2,3]
+  let list2 = [2,1]
+  List.show<Nat>(Nat.show, concat<Nat>(list, list2))
   // init<Nat>(list)

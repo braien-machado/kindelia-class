@@ -93,8 +93,34 @@ sort_ascending(xs: List<Nat>): List<Nat>
 //   returns Maybe.some!(element)
 // else
 //   returns Maybe.none!
+
+length<A: Type>(xs: List<A>): Nat
+  case xs {
+    nil: Nat.zero
+    cons: Nat.succ(length<A>(xs.tail))
+  }
+
+ltn_nat(a: Nat, b: Nat): Bool
+  case a b {
+    zero succ: Bool.true
+    succ succ: ltn_nat(a.pred, b.pred)
+  } default Bool.false
+
+get.go<A: Type>(idx: Nat, xs: List<A>, cur: Nat): Maybe<A>
+  case xs {
+    nil: Maybe.none<A>
+    cons: case eql_nat(idx, cur) {
+      false: get.go<A>(idx, xs.tail, Nat.succ(cur))
+      true: Maybe.some<A>(xs.head)
+    }
+  }
+
 get<A: Type>(idx: Nat, xs: List<A>): Maybe<A>
-  ?g
+  let len = length<A>(xs)
+  case ltn_nat(idx, len) {
+    true: get.go<A>(idx, xs, 0)
+    false: Maybe.none<A>
+  }
 
 // Removes all elements that does not match a condition
 // List.filter<Nat>(Nat.odd, [1, 2, 3, 4, 5]) = [1, 3, 5]
@@ -102,10 +128,10 @@ filter<A: Type>(f: A -> Bool, xs: List<A>): List<A>
   ?f
 
 ex_09: _
-  let listNat = [2,3,4,12,2,2,2,0,2,20,2,1,4,4,43,2,2,2,2,2]
+  let listNat = [2,3,4]
   let listString = ["a", "b", "c"]
 
   // // Shows list of pairs
   // List.show<Pair<Nat,String>>(Pair.show<Nat,String>(Nat.show, String.show), zip<Nat, String>(list1, list2))
   
-  List.show<Nat>(Nat.show, sort_ascending(listNat))
+  Maybe.show!(Nat.show get<Nat>(0, listNat))

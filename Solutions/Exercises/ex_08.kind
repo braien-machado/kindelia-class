@@ -38,7 +38,13 @@ last<A: Type>(xs: List<A>): Maybe<A>
 
 // Returns the list without the last element
 init<A: Type>(xs: List<A>): List<A>
-  ?init
+  case xs {
+    nil: List.nil<A>
+    cons: case xs.tail {
+      nil: List.nil<A>
+      cons: List.cons<A>(xs.head, init<A>(xs.tail))
+    }
+  }
 
 // Concatenates two lists
 concat<A: Type>(xs: List<A>, ys: List<A>): List<A>
@@ -69,6 +75,6 @@ reverse.go<A: Type>(new_list: List<A>, old_list: List<A>): List<A>
 // List.show<T>(T.show, List<T>)
 
 ex_08: _
-  let list = []
-  // List.show<Nat>(Nat.show, length<Nat>(list))
-  last<Nat>(list)
+  let list = [1]
+  List.show<Nat>(Nat.show, init<Nat>(list))
+  // init<Nat>(list)

@@ -50,8 +50,25 @@ smallest(xs: List<Nat>): Nat
   }
 
 // Returns the same list without the smallest element
+
+eql_nat(a: Nat, b: Nat): Bool
+  case a b {
+    zero zero: Bool.true
+    succ succ: eql_nat(a.pred, b.pred)
+  } default Bool.false
+
+delete_smallest.go(xs: List<Nat>, sm: Nat): List<Nat>
+  case xs {
+    nil: List.nil<Nat>
+    cons: case eql_nat(sm, xs.head) {
+      true: delete_smallest.go(xs.tail, sm)
+      false: List.cons<Nat>(xs.head, delete_smallest.go(xs.tail, sm))
+    }
+  }
+
 delete_smallest(xs: List<Nat>): List<Nat>
-  ?d
+  let sm = smallest(xs)
+  delete_smallest.go(xs, sm)
 
 // Returns the same list, in ascending order
 sort_ascending(xs: List<Nat>): List<Nat>
@@ -71,9 +88,10 @@ filter<A: Type>(f: A -> Bool, xs: List<A>): List<A>
   ?f
 
 ex_09: _
-  let listNat = []
+  let listNat = [2,3,4,12,2,2,2,2,2,2,3,2,2,2,2,2]
   let listString = ["a", "b", "c"]
 
   // // Shows list of pairs
   // List.show<Pair<Nat,String>>(Pair.show<Nat,String>(Nat.show, String.show), zip<Nat, String>(list1, list2))
-  Nat.show(smallest(listNat))
+  
+  List.show<Nat>(Nat.show, delete_smallest(listNat))

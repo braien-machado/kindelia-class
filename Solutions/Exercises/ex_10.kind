@@ -261,8 +261,16 @@ is_nat(xs: String): Bool
 
 //split(b, "l") -> ["He","" , "o"
 //split(c, "e") -> ["t", "xt"]
-split(xs: String, match: String): List<String>
-  ?split
+// has_match(c: char, match: )
+
+// split(xs: String, match: String): List<String>
+//   case match {
+//     nil: open xs {
+//       nil: List.nil<String>
+//       cons: List.cons<String>(xs.head, split(xs.tail, match))
+//     }
+//     cons:
+//   }
 
 
 
@@ -272,9 +280,13 @@ split(xs: String, match: String): List<String>
 //take_while(is_lower,    b) -> "ello"
 //take_while(is_equal('t'), c) -> "tt"
 take_while(cond: Char -> Bool, xs: String): String
-  ?take_while
-
-
+  case xs {
+    nil: String.nil
+    cons: case cond(xs.head) {
+      true: String.cons(xs.head, take_while(cond, xs.tail))
+      false: take_while(cond, xs.tail)
+    }
+  }
 
 //Finds the index of the head for the first occurence if any of the Characters are equal
 
@@ -293,6 +305,6 @@ flatten(lxs: List<String>): String
   ?flatten
 
 ex_10: _
-  let function = is_nat("0s1")
+  let function = take_while(is_lower, "HelL0")
   function
   // Maybe.show<Nat>(Nat.show, function)

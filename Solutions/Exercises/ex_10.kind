@@ -145,10 +145,13 @@ concat(xs: String, ys: String): String
 //drop(2, b) -> "llo"
 //drop(3, c) -> "t"
 drop(n: Nat, xs: String): String
-  ?stringdrop
-
-
-
+  case n {
+    zero: xs
+    succ: case xs {
+      nil: xs
+      cons: drop(n.pred, xs.tail) 
+    }
+  }
 
 //Takes n elements of a String
 
@@ -263,6 +266,6 @@ flatten(lxs: List<String>): String
   ?flatten
 
 ex_10: _
-  let function = concat("Tenac", "iousD")
+  let function = drop(10, "Tenac")
   function
   // Maybe.show<Nat>(Nat.show, function)

@@ -78,13 +78,14 @@ equal(x: Char, y: Char): Bool
 
 //Transforms Characters into Nat digits
 
-//to_digit('0') -> Nat.zero
-//to_digit('1') -> Nat.succ(Nat.zero)
-//to_digit('4') -> 4
-to_digit(x: Char): Nat
-  ?to_digit
-
-
+//to_digit('0') -> Maybe.some(Nat.zero)
+//to_digit('1') -> Maybe.some(Nat.succ(Nat.zero))
+//to_digit('a') -> Maybe.none
+to_digit(x: Char): Maybe<Nat>
+  case is_digit(x) {
+    true: Maybe.some<Nat>(U16.to_nat(U16.sub(x, 48#16)))
+    false: Maybe.none<Nat>
+  }
 
 //Transforms all Characters into Lower Case Characters
 
@@ -260,5 +261,6 @@ flatten(lxs: List<String>): String
 
 
 ex_10: _
-  let function = equal('a', 'a')
+  let function = to_digit('9')
   function
+  // Maybe.show<Nat>(Nat.show, function)

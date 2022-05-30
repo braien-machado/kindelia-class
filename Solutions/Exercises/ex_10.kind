@@ -285,6 +285,23 @@ element_start_match(xs: String, match: String, acc: Nat): Maybe<Nat>
     }
   }
 
+string_length.go(s: String, acc: Nat): Nat
+  case s {
+    nil: acc
+    cons: string_length.go(s.tail, Nat.succ(acc))
+  }
+
+string_length(s: String): Nat
+  string_length.go(s, 0)
+
+add_nat(a: Nat, b: Nat): Nat
+  case a {
+    zero: b
+    succ: case b {
+      zero: a
+      succ: add_nat(a.pred, Nat.succ(b))
+    }
+  }
 
 split(xs: String, match: String): List<String>
   case xs {
@@ -295,7 +312,12 @@ split(xs: String, match: String): List<String>
         let n = element_start_match(xs, match, 0)
         case n {
           none: List.cons<String>(xs, List.nil<String>)
-          some: List.cons<String>(take(n.value, xs), List.nil<String>)
+          some:
+            let str = take(n.value, xs)
+            let str_length = string_length(str)
+            let match_length = string_length(match)
+            let total_length = add_nat(str_length, match_length)
+            List.cons<String>(str, split(drop(total_length, xs), match))
         }
     }
   }
@@ -344,7 +366,7 @@ flatten(lxs: List<String>): String
   }
 
 ex_10: _
-  let function = split("string", "ing")
+  let function = split("abóbora", "ab")
   // function
   List.show<String>(String.show, function)
   // Maybe.show<Nat>(Nat.show, function)

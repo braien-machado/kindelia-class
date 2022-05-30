@@ -30,9 +30,13 @@ Char: Type
 //is_upper('A') -> Bool.true
 //is_upper('0') -> Bool.false
 is_upper(x: Char): Bool
-  ?is_upper
-
-
+  case U16.gte(x, 65#16) {
+    true: case U16.lte(x, 90#16) {
+      true: Bool.true
+      false: Bool.false
+    }
+    false: Bool.false
+  }
 
 //Verifies if the character is Lower Case
 
@@ -247,4 +251,6 @@ flatten(lxs: List<String>): String
   ?flatten
 
 
-
+ex_10: _
+  let function = is_lower('A')
+  function

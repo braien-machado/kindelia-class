@@ -66,15 +66,13 @@ is_digit(x: Char): Bool
     false: Bool.false
   }
 
-
-
 //Verifies if both of the Characters are the same
 
 //is_equal('a', 'A') -> Bool.false
 //is_equal('A', '0') -> Bool.false
 //is_equal('0', '0') -> Bool.true
 equal(x: Char, y: Char): Bool
-  ?equal
+  U16.eql(x, y)
 
 
 
@@ -262,5 +260,5 @@ flatten(lxs: List<String>): String
 
 
 ex_10: _
-  let function = is_digit('A')
+  let function = equal('a', 'a')
   function

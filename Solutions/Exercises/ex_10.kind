@@ -291,10 +291,12 @@ split(xs: String, match: String): List<String>
     nil: List.nil<String>
     cons: case match {
       nil: List.cons<String>(Char.to_string(xs.head), split(xs.tail, match))
-      cons: case element_start_match(xs, match, 1) {
-        none: List.cons<String>(xs, List.nil<String>)
-        some: List.cons<String>("Tem match", List.nil<String>)
-      }
+      cons:
+        let n = element_start_match(xs, match, 0)
+        case n {
+          none: List.cons<String>(xs, List.nil<String>)
+          some: List.cons<String>(take(n.value, xs), List.nil<String>)
+        }
     }
   }
 
@@ -342,7 +344,7 @@ flatten(lxs: List<String>): String
   }
 
 ex_10: _
-  let function = split("string", "m")
+  let function = split("string", "ing")
   // function
   List.show<String>(String.show, function)
   // Maybe.show<Nat>(Nat.show, function)

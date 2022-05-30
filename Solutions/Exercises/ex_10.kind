@@ -204,15 +204,24 @@ map(fn: Char -> Char, xs: String): String
 string_to_upper(xs: String): String
   map(to_upper, xs)
 
-//Convers the String into bits
+//Converts the String into bits
 
 //to_bits(a) -> "00000000010010010000000001001000"
 //to_bits(b) -> "00000000011011110000000001101100000000000110110000000000011001010000000001001000"
 //to_bits(c) -> "0000000001110100000000000111100000000000011001010000000001110100"
+
+bits_concat(a: Bits, b: Bits) : Bits
+  case a {
+    e: b
+    o: Bits.o(bits_concat(a.pred, b))
+    i: Bits.i(bits_concat(a.pred, b))
+  }
+
 to_bits(xs: String): Bits
-  ?to_bits
-
-
+  case xs {
+    nil: Bits.e
+    cons: bits_concat(U16.to_bits(xs.head), to_bits(xs.tail))
+  }
 
 //Verifies if two Strings are Equal
 
@@ -269,7 +278,7 @@ find(xs: String, x: Char): Nat
 flatten(lxs: List<String>): String
   ?flatten
 
-ex_10: String
-  let function = string_to_upper("He2121llo")
+ex_10: _
+  let function = to_bits("01")
   function
   // Maybe.show<Nat>(Nat.show, function)

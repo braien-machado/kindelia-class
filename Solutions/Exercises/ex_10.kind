@@ -173,8 +173,7 @@ take(n: Nat xs: String): String
 //slice(2, 4, b) -> "ll"
 //slice(1, 2, c) -> "ex"
 slice(n: Nat, x: Nat, xs: String): String
-  ?stringslice
-
+  take(x, drop(n, xs))
 
 //Filters the String and discards all the Chars that doesn't satisfy given condition 
 
@@ -270,6 +269,6 @@ flatten(lxs: List<String>): String
   ?flatten
 
 ex_10: _
-  let function = take(4, "Tenac")
+  let function = slice(2,2, "Hello")
   function
   // Maybe.show<Nat>(Nat.show, function)

@@ -261,16 +261,42 @@ is_nat(xs: String): Bool
 
 //split(b, "l") -> ["He","" , "o"
 //split(c, "e") -> ["t", "xt"]
-// has_match(c: char, match: )
 
-// split(xs: String, match: String): List<String>
-//   case match {
-//     nil: open xs {
-//       nil: List.nil<String>
-//       cons: List.cons<String>(xs.head, split(xs.tail, match))
-//     }
-//     cons:
-//   }
+// split("Hello", "el") -> ["H", "lo"]
+// index_da_primeira_aparicao = x
+// take(x, "Hello") -> "H"
+// drop(length_take+length_match, "Hello")
+// H,e,l,l,o
+// e,l
+// H, lo
+
+element_start_match(xs: String, match: String, acc: Nat): Maybe<Nat>
+  case xs {
+    nil: case match {
+      nil: Maybe.some<Nat>(acc)
+      cons: Maybe.none<Nat>
+    }
+    cons: case match {
+      nil: Maybe.some<Nat>(acc)
+      cons: case equal(xs.head, match.head) {
+        true: element_start_match(xs.tail, match.tail, acc)
+        false: element_start_match(xs.tail, match, Nat.succ(acc))
+      }
+    }
+  }
+
+
+split(xs: String, match: String): List<String>
+  case xs {
+    nil: List.nil<String>
+    cons: case match {
+      nil: List.cons<String>(Char.to_string(xs.head), split(xs.tail, match))
+      cons: case element_start_match(xs, match, 1) {
+        none: List.cons<String>(xs, List.nil<String>)
+        some: List.cons<String>("Tem match", List.nil<String>)
+      }
+    }
+  }
 
 
 
@@ -316,6 +342,7 @@ flatten(lxs: List<String>): String
   }
 
 ex_10: _
-  let function = flatten(["HI", "Hello", "text"])
-  function
+  let function = split("string", "m")
+  // function
+  List.show<String>(String.show, function)
   // Maybe.show<Nat>(Nat.show, function)

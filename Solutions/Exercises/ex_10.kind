@@ -290,13 +290,21 @@ take_while(cond: Char -> Bool, xs: String): String
 
 //Finds the index of the head for the first occurence if any of the Characters are equal
 
-//find(a, "H") -> 0
-//find(b, "l") -> 2
-//find(c, "x") -> 2
-find(xs: String, x: Char): Nat
-  ?find
+//find(a, 'H') -> 0
+//find(b, 'l') -> 2
+//find(c, 'x') -> 2
 
+find_aux(xs: String, x: Char, acc: Nat): Maybe<Nat>
+  case xs {
+      nil: Maybe.none<Nat>
+      cons: case equal(xs.head, x) {
+        true: Maybe.some<Nat>(acc)
+        false: find_aux(xs.tail, x, Nat.succ(acc))
+      }
+    }
 
+find(xs: String, x: Char): Maybe<Nat>
+  find_aux(xs, x, 0)
 
 //Concatenates all elements of a List of Strings
 
@@ -305,6 +313,6 @@ flatten(lxs: List<String>): String
   ?flatten
 
 ex_10: _
-  let function = take_while(is_lower, "HelL0")
-  function
-  // Maybe.show<Nat>(Nat.show, function)
+  let function = find("Hello", 'l')
+  // function
+  Maybe.show<Nat>(Nat.show, function)

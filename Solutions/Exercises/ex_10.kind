@@ -249,9 +249,13 @@ stringequal(xs: String, ys: String): Bool
 //is_nat(b)      -> Bool.false
 //is_nat("1234") -> Bool.true
 is_nat(xs: String): Bool
-  ?is_nat
-
-
+  case xs {
+    nil: Bool.true
+    cons: case is_digit(xs.head) {
+      true: is_nat(xs.tail)
+      false: Bool.false
+    }
+  }
 
 // Divides the elements of a String into a list, using a match you decide
 
@@ -289,6 +293,6 @@ flatten(lxs: List<String>): String
   ?flatten
 
 ex_10: _
-  let function = stringequal("01", "00")
+  let function = is_nat("0s1")
   function
   // Maybe.show<Nat>(Nat.show, function)

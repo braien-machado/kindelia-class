@@ -129,16 +129,15 @@ type String {
 //b = "Hello"
 //c = "text"
 
-
-
 //Concatenates two Strings into one
 
 //concat(a,b) -> "HiHello"
 //concat(b,c) -> "Hellotext"
 concat(xs: String, ys: String): String
-  ?concat
-
-
+  case xs {
+    nil: ys
+    cons: String.cons(xs.head, concat(xs.tail, ys))
+  }
 
 //Drops a n Number of characteres from a String
 
@@ -263,8 +262,7 @@ find(xs: String, x: Char): Nat
 flatten(lxs: List<String>): String
   ?flatten
 
-
 ex_10: _
-  let function = to_upper('0')
-  Char.to_string(function)
+  let function = concat("Tenac", "iousD")
+  function
   // Maybe.show<Nat>(Nat.show, function)

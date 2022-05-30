@@ -44,7 +44,13 @@ is_upper(x: Char): Bool
 //is_lower('A') -> Bool.false
 //is_lower('0') -> Bool.false
 is_lower(x: Char): Bool
-  ?is_lower
+  case U16.gte(x, 97#16) {
+    true: case U16.lte(x, 122#16) {
+      true: Bool.true
+      false: Bool.false
+    }
+    false: Bool.false
+  }
 
 
 
@@ -252,5 +258,5 @@ flatten(lxs: List<String>): String
 
 
 ex_10: _
-  let function = is_lower('A')
+  let function = is_lower('0')
   function

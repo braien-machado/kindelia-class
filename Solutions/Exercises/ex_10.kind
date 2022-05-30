@@ -317,7 +317,10 @@ split(xs: String, match: String): List<String>
             let str_length = string_length(str)
             let match_length = string_length(match)
             let total_length = add_nat(str_length, match_length)
-            List.cons<String>(str, split(drop(total_length, xs), match))
+            case str {
+              nil: split(drop(total_length, xs), match)
+              cons: List.cons<String>(str, split(drop(total_length, xs), match))
+            }
         }
     }
   }

@@ -310,9 +310,12 @@ find(xs: String, x: Char): Maybe<Nat>
 
 //flatten([a,b,c]) -> "HIHellotext"
 flatten(lxs: List<String>): String
-  ?flatten
+  case lxs {
+    nil: String.nil
+    cons: concat(lxs.head, flatten(lxs.tail))
+  }
 
 ex_10: _
-  let function = find("Hello", 'l')
-  // function
-  Maybe.show<Nat>(Nat.show, function)
+  let function = flatten(["HI", "Hello", "text"])
+  function
+  // Maybe.show<Nat>(Nat.show, function)

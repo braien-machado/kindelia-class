@@ -92,10 +92,13 @@ to_digit(x: Char): Maybe<Nat>
 //to_lower('A') -> 'a'
 //to_lower('B') -> 'b'
 //to_lower('Z') -> 'z'
+//to_lower('a') -> 'a'
+//to_lower('0') -> '0'
 to_lower(x: Char): Char
-  ?to_lower
-
-
+  case is_upper(x) {
+    true: U16.add(x, 32#16)
+    false: x
+  }
 
 //Transforms all Characters into Upper Case Characters
 
@@ -261,6 +264,6 @@ flatten(lxs: List<String>): String
 
 
 ex_10: _
-  let function = to_digit('9')
-  function
+  let function = to_lower('Z')
+  Char.to_string(function)
   // Maybe.show<Nat>(Nat.show, function)

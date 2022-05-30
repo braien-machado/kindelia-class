@@ -202,9 +202,7 @@ map(fn: Char -> Char, xs: String): String
 
 //string_to_upper(c) -> "TEXT"
 string_to_upper(xs: String): String
-  ?to_upper
-
-
+  map(to_upper, xs)
 
 //Convers the String into bits
 
@@ -271,7 +269,7 @@ find(xs: String, x: Char): Nat
 flatten(lxs: List<String>): String
   ?flatten
 
-ex_10: _
-  let function = map(to_upper, "He2121llo")
+ex_10: String
+  let function = string_to_upper("He2121llo")
   function
   // Maybe.show<Nat>(Nat.show, function)

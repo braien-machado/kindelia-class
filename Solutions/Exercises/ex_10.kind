@@ -229,9 +229,19 @@ to_bits(xs: String): Bits
 //stringequal(a, b) -> Bool.false
 //stringequal(b, c) -> Bool.false
 stringequal(xs: String, ys: String): Bool
-  ?stringequal
-
-
+  case xs {
+    nil: case ys {
+      nil: Bool.true
+      cons: Bool.false
+    }
+    cons: case ys {
+      nil: Bool.false
+      cons: case equal(xs.head, ys.head) {
+        true: stringequal(xs.tail, ys.tail)
+        false: Bool.false
+      }
+    }
+  }
 
 //Verifies if All String elements are Numbers
 
@@ -279,6 +289,6 @@ flatten(lxs: List<String>): String
   ?flatten
 
 ex_10: _
-  let function = to_bits("01")
+  let function = stringequal("01", "00")
   function
   // Maybe.show<Nat>(Nat.show, function)

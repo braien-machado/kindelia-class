@@ -105,12 +105,13 @@ to_lower(x: Char): Char
 //to_upper('a') -> 'A' 
 //to_upper('b') -> 'B'
 //to_upper('z') -> 'Z'
+//to_lower('A') -> 'A'
+//to_lower('0') -> '0'
 to_upper(x: Char): Char
-  ?to_upper
-
-
-
-
+  case is_lower(x) {
+    true: U16.sub(x, 32#16)
+    false: x
+  }
 
 //String Type
 type String { 
@@ -264,6 +265,6 @@ flatten(lxs: List<String>): String
 
 
 ex_10: _
-  let function = to_lower('Z')
+  let function = to_upper('0')
   Char.to_string(function)
   // Maybe.show<Nat>(Nat.show, function)

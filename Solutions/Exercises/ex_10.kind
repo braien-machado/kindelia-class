@@ -52,15 +52,19 @@ is_lower(x: Char): Bool
     false: Bool.false
   }
 
-
-
 //Verifies if the character is a Number-Digit Value
 
 //is_digit('a') -> Bool.false
 //is_digit('A') -> Bool.false
 //is_digit('0') -> Bool.true
 is_digit(x: Char): Bool
-  ?is_digit
+  case U16.gte(x, '0') {
+    true: case U16.lte(x, '9') {
+      true: Bool.true
+      false: Bool.false
+    }
+    false: Bool.false
+  }
 
 
 
@@ -258,5 +262,5 @@ flatten(lxs: List<String>): String
 
 
 ex_10: _
-  let function = is_lower('0')
+  let function = is_digit('A')
   function

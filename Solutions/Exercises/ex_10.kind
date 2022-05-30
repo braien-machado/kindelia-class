@@ -181,10 +181,13 @@ slice(n: Nat, x: Nat, xs: String): String
 //filter(is_lower,      b) -> "ello"
 //filter(is_equal('t'), c) -> "tt"
 filter(cond: Char -> Bool, xs: String): String
-  ?filter
-
-
-
+  case xs {
+    nil: xs
+    cons: case cond(xs.head) {
+      true: String.cons(xs.head, filter(cond, xs.tail))
+      false: filter(cond, xs.tail)
+    }
+  }
 
 //Applies a Function to all Characters of the String
 
@@ -269,6 +272,6 @@ flatten(lxs: List<String>): String
   ?flatten
 
 ex_10: _
-  let function = slice(2,2, "Hello")
+  let function = filter(is_digit "He2121llo")
   function
   // Maybe.show<Nat>(Nat.show, function)

@@ -1,0 +1,60 @@
+equal(x: Char, y: Char): Bool
+  U16.eql(x, y)
+
+concat(xs: String, ys: String): String
+  case xs {
+    nil: ys
+    cons: String.cons(xs.head, concat(xs.tail, ys))
+  }
+
+drop(n: Nat, xs: String): String
+  case n {
+    zero: xs
+    succ: case xs {
+      nil: xs
+      cons: drop(n.pred, xs.tail) 
+    }
+  }
+
+string_length.go(s: String, acc: Nat): Nat
+  case s {
+    nil: acc
+    cons: string_length.go(s.tail, Nat.succ(acc))
+  }
+
+string_length(s: String): Nat
+  string_length.go(s, 0)
+
+Verify_string_match(str: String, match: String): Bool
+  case str {
+    nil: case match {
+      nil: Bool.true
+      cons: Bool.false
+    }
+    cons: case match {
+      nil: Bool.true
+      cons: case equal(str.head, match.head) {
+        true: Verify_string_match(str.tail, match.tail)
+        false: Bool.false
+      }
+    }
+  }
+
+Find_and_replace(to_remove: String, to_add: String, str: String): _
+  case str {
+    nil: str
+    cons: case to_remove {
+      nil: str
+      cons: case Verify_string_match(str, to_remove) {
+        true:
+          let str_after_drop = drop(string_length(to_remove), str)
+          concat(to_add, Find_and_replace(to_remove, to_add, str_after_drop))
+        false: String.cons(str.head, Find_and_replace(to_remove, to_add, str.tail))
+      }
+    }
+  }
+
+String_test: _
+  // let fn = Find_and_replace("test", "example", "In this test, the word test should be replaced by the word example.")
+  let fn = Find_and_replace("test", "example", "test test test")
+  fn

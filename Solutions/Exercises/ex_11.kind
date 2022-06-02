@@ -31,7 +31,13 @@ get<A: Type>(key: Nat, lm: ListMap<A>): Maybe<A>
 // Applies a function to a Value from a Key
 // Returns the same ListMap if the key is not present 
 mut<A: Type>(key: Nat, fn: A -> A, lm: ListMap<A>): ListMap<A>
-  ?mut
+  case lm {
+    empty: lm
+    cons: case Nat.eql(key, lm.head@fst) {
+      true: ListMap.cons<A>(({ key, fn(lm.head@snd) }), lm.tail)
+      false: ListMap.cons<A>(lm.head, mut<A>(key, fn, lm.tail))
+    }
+  }
 
 // Converts the ListMap to a String
 show<A: Type>(fn: A -> String, lm: ListMap<A>): String
@@ -65,7 +71,7 @@ ex_11: IO<Unit>
   IO {
     Tests._11.set(set)
     Tests._11.get(get)
-    // Tests._11.mut(mut)
+    Tests._11.mut(mut)
     // Tests._11.has(has)
     // Tests._11.filter(filter)
     // Tests._11.map(map)

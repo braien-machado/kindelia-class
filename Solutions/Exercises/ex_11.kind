@@ -9,7 +9,13 @@ type ListMap <A: Type> {
 // If the key is already present, its value is updated
 // If the key is not present, the value is added to the map
 set<A: Type>(key: Nat, value: A, lm: ListMap<A>): ListMap<A>
-  ?set
+  case lm {
+    empty: ListMap.cons<A>(({ key, value }), lm)
+    cons: case Nat.eql(key, lm.head@fst) {
+      true: ListMap.cons<A>(({ key, value }), lm.tail)
+      false: ListMap.cons<A>(lm.head, set<A>(key, value, lm.tail))
+    }
+  }
 
 // Returns a Value from a Key
 // If the key is not present, returns None

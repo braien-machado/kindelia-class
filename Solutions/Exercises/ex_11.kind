@@ -14,7 +14,15 @@ set<A: Type>(key: Nat, value: A, lm: ListMap<A>): ListMap<A>
 // Returns a Value from a Key
 // If the key is not present, returns None
 get<A: Type>(key: Nat, lm: ListMap<A>): Maybe<A>
-  ?get
+  case lm {
+    empty: Maybe.none<A>
+    cons: case lm.head {
+      new: case Nat.eql(key, lm.head.fst) {
+        true: Maybe.some<A>(lm.head.snd)
+        false: get<A>(key, lm.tail)
+      } 
+    }
+  }
 
 // Applies a function to a Value from a Key
 // Returns the same ListMap if the key is not present 
@@ -51,10 +59,10 @@ stress_test(sets: Nat, gets: Nat): String
 
 ex_11: IO<Unit>
   IO {
-    Tests._11.set(set)
+    // Tests._11.set(set)
     Tests._11.get(get)
-    Tests._11.mut(mut)
-    Tests._11.has(has)
-    Tests._11.filter(filter)
-    Tests._11.map(map)
+    // Tests._11.mut(mut)
+    // Tests._11.has(has)
+    // Tests._11.filter(filter)
+    // Tests._11.map(map)
   } 

@@ -48,9 +48,21 @@ show.aux<A: Type>(fn: A -> String, lm: ListMap<A>): String
 
 show<A: Type>(fn: A -> String, lm: ListMap<A>): String
   case lm {
-    empty: ""
+    empty: "[]"
     cons: "[{" | Nat.show(lm.head@fst) | "," | fn(lm.head@snd) | "}" | show.aux<A>(fn, lm.tail)
   }
+
+// show.aux<A: Type>(fn: A -> String, lm: ListMap<A>): String
+//   case lm {
+//     empty: "]"
+//     cons: "," | Pair.show<Nat, A>(Nat.show, fn, (lm.head)) | show.aux<A>(fn, lm.tail)
+//   }
+
+// show<A: Type>(fn: A -> String, lm: ListMap<A>): String
+//   case lm {
+//     empty: "[]"
+//     cons: "[" | Pair.show<Nat, A>(Nat.show, fn, (lm.head)) | show.aux<A>(fn, lm.tail)
+//   }
 
 // Checks if the ListMap has a key
 // Returns true if the key is present, false otherwise

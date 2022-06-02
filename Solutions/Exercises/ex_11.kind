@@ -56,7 +56,13 @@ has<A:Type>(key: Nat, lm: ListMap<A>): Bool
 
 // Removes all Elements that doesn't satisfy a condition
 filter<A: Type>(cond: A -> Bool, lm: ListMap<A>): ListMap<A>
-  ?filter
+  case lm {
+    empty: lm
+    cons: case cond(lm.head@snd) {
+      true: ListMap.cons<A>(lm.head, filter<A>(cond, lm.tail))
+      false: filter<A>(cond, lm.tail)
+    }
+  }
 
 // Applies a function to all Values
 map<A: Type>(fn: A -> A, lm: ListMap<A>): ListMap<A>
@@ -79,6 +85,6 @@ ex_11: IO<Unit>
     Tests._11.get(get)
     Tests._11.mut(mut)
     Tests._11.has(has)
-    // Tests._11.filter(filter)
+    Tests._11.filter(filter)
     // Tests._11.map(map)
   } 

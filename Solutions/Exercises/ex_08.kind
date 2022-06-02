@@ -101,6 +101,16 @@ reverse.go<A: Type>(new_list: List<A>, old_list: List<A>): List<A>
 // Shows list of lists (matrix)
 // List.show<List<T>>(List.show<T>(T.show))(matrix)
 
-ex_08: _
-  let list = [1,2,3]
-  List.show!(Nat.show)(reverse<Nat>(list))
+ex_08: IO<Unit>
+  IO {
+    Tests._08.head(head)
+    Tests._08.tail(tail)
+    Tests._08.length(length)
+    Tests._08.last(last)
+    Tests._08.init(init)
+    Tests._08.concat(concat)
+    Tests._08.drop(drop)
+    Tests._08.take(take)
+    Tests._08.map(map)
+    Tests._08.reverse(reverse)
+  }

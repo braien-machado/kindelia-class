@@ -81,11 +81,13 @@ equal(x: Char, y: Char): Bool
 //to_digit('0') -> Maybe.some(Nat.zero)
 //to_digit('1') -> Maybe.some(Nat.succ(Nat.zero))
 //to_digit('a') -> Maybe.none
-to_digit(x: Char): Maybe<Nat>
-  case is_digit(x) {
-    true: Maybe.some<Nat>(U16.to_nat(U16.sub(x, 48#16)))
-    false: Maybe.none<Nat>
-  }
+// to_digit(x: Char): Maybe<Nat>
+//   case is_digit(x) {
+//     true: Maybe.some<Nat>(U16.to_nat(U16.sub(x, 48#16)))
+//     false: Maybe.none<Nat>
+//   }
+to_digit(x: Char): Nat
+  U16.to_nat(U16.sub(x, 48#16))
 
 //Transforms all Characters into Lower Case Characters
 
@@ -250,9 +252,12 @@ stringequal(xs: String, ys: String): Bool
 //is_nat("1234") -> Bool.true
 is_nat(xs: String): Bool
   case xs {
-    nil: Bool.true
+    nil: Bool.false
     cons: case is_digit(xs.head) {
-      true: is_nat(xs.tail)
+      true: case xs.tail {
+        nil: Bool.true
+        cons: is_nat(xs.tail)
+      }
       false: Bool.false
     }
   }
@@ -368,8 +373,26 @@ flatten(lxs: List<String>): String
     cons: concat(lxs.head, flatten(lxs.tail))
   }
 
-ex_10: _
-  let function = split("abóbora", "ab")
-  // function
-  List.show<String>(String.show, function)
-  // Maybe.show<Nat>(Nat.show, function)
+ex_10: IO<Unit>
+  IO {
+    Tests._10.is_upper(is_upper)
+    Tests._10.is_lower(is_lower)
+    Tests._10.is_digit(is_digit)
+    Tests._10.equal(equal)
+    Tests._10.to_digit(to_digit)
+    Tests._10.to_lower(to_lower)
+    Tests._10.to_upper(to_upper)
+    Tests._10.concat(concat)
+    Tests._10.drop(drop)
+    Tests._10.take(take)
+    Tests._10.slice(slice)
+    Tests._10.filter(filter)
+    Tests._10.map(map)
+    Tests._10.string_to_upper(string_to_upper)
+    Tests._10.to_bits(to_bits)
+    Tests._10.stringequal(stringequal)
+    Tests._10.is_nat(is_nat)
+    Tests._10.take_while(take_while)
+    Tests._10.find(find) 
+    Tests._10.flatten(flatten)
+  }

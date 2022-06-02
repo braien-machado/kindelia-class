@@ -34,18 +34,18 @@ lte_nat(a: Nat, b: Nat): Bool
     }
   }
 
-smallest.go(xs: List<Nat>, sm: Nat): Nat
+smallest.go(xs: List<Nat>, sm: Nat): Maybe<Nat>
   case xs {
-    nil: sm
+    nil: Maybe.some<Nat>(sm)
     cons: case lte_nat(xs.head, sm) {
       true: smallest.go(xs.tail, xs.head)
       false: smallest.go(xs.tail, sm)
     }
   }
 
-smallest(xs: List<Nat>): Nat
+smallest(xs: List<Nat>): Maybe<Nat>
   case xs {
-    nil: Nat.zero
+    nil: Maybe.none<Nat>
     cons: smallest.go(xs.tail, xs.head)
   }
 
@@ -68,7 +68,10 @@ delete_smallest.go(xs: List<Nat>, sm: Nat): List<Nat>
 
 delete_smallest(xs: List<Nat>): List<Nat>
   let sm = smallest(xs)
-  delete_smallest.go(xs, sm)
+  case sm {
+    none: xs
+    some: delete_smallest.go(xs, sm.value)
+  }
 
 // Returns the same list, in ascending order
 
@@ -83,9 +86,12 @@ delete_smallest_once(xs: List<Nat>, sm: Nat): List<Nat>
 
 sort_ascending(xs: List<Nat>): List<Nat>
   let sm = smallest(xs)
-  case xs {
+  case sm {
+    none: xs
+    some: case xs {
     nil: List.nil<Nat>
-    cons: List.cons<Nat>(sm, sort_ascending(delete_smallest_once(xs, sm)))
+    cons: List.cons<Nat>(sm.value, sort_ascending(delete_smallest_once(xs, sm.value)))
+    }
   }
 
 // Returns an element at an index from the list
@@ -133,11 +139,12 @@ filter<A: Type>(f: A -> Bool, xs: List<A>): List<A>
     }
   }
 
-ex_09: _
-  let listNat = [2,3,4]
-  let listString = ["a", "b", "c"]
-
-  // // Shows list of pairs
-  // List.show<Pair<Nat,String>>(Pair.show<Nat,String>(Nat.show, String.show), zip<Nat, String>(list1, list2))
-  
-  List.show<Nat>(Nat.show, filter<Nat>(Nat.odd, listNat))
+ex_09: IO<Unit>
+  IO {
+    Tests._09.zip(zip)
+    Tests._09.smallest(smallest)
+    Tests._09.delete_smallest(delete_smallest)
+    Tests._09.sort_ascending(sort_ascending)
+    Tests._09.get(get)
+    Tests._09.filter(filter)
+  }

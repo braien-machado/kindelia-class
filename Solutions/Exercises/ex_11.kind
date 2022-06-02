@@ -46,7 +46,13 @@ show<A: Type>(fn: A -> String, lm: ListMap<A>): String
 // Checks if the ListMap has a key
 // Returns true if the key is present, false otherwise
 has<A:Type>(key: Nat, lm: ListMap<A>): Bool
-  ?has
+  case lm {
+    empty: Bool.false
+    cons: case Nat.eql(key, lm.head@fst) {
+      true: Bool.true
+      false: has<A>(key, lm.tail)
+    }
+  }
 
 // Removes all Elements that doesn't satisfy a condition
 filter<A: Type>(cond: A -> Bool, lm: ListMap<A>): ListMap<A>
@@ -72,7 +78,7 @@ ex_11: IO<Unit>
     Tests._11.set(set)
     Tests._11.get(get)
     Tests._11.mut(mut)
-    // Tests._11.has(has)
+    Tests._11.has(has)
     // Tests._11.filter(filter)
     // Tests._11.map(map)
   } 

@@ -40,8 +40,17 @@ mut<A: Type>(key: Nat, fn: A -> A, lm: ListMap<A>): ListMap<A>
   }
 
 // Converts the ListMap to a String
+show.aux<A: Type>(fn: A -> String, lm: ListMap<A>): String
+  case lm {
+    empty: "]"
+    cons: "," | "{" | Nat.show(lm.head@fst) | "," | fn(lm.head@snd) | "}" | show.aux<A>(fn, lm.tail)
+  }
+
 show<A: Type>(fn: A -> String, lm: ListMap<A>): String
-  ?show
+  case lm {
+    empty: ""
+    cons: "[{" | Nat.show(lm.head@fst) | "," | fn(lm.head@snd) | "}" | show.aux<A>(fn, lm.tail)
+  }
 
 // Checks if the ListMap has a key
 // Returns true if the key is present, false otherwise
@@ -82,12 +91,15 @@ stress_test(sets: Nat, gets: Nat): String
     text
   text
 
-ex_11: IO<Unit>
-  IO {
-    Tests._11.set(set)
-    Tests._11.get(get)
-    Tests._11.mut(mut)
-    Tests._11.has(has)
-    Tests._11.filter(filter)
-    Tests._11.map(map)
-  } 
+// ex_11: IO<Unit>
+//   IO {
+//     Tests._11.set(set)
+//     Tests._11.get(get)
+//     Tests._11.mut(mut)
+//     Tests._11.has(has)
+//     Tests._11.filter(filter)
+//     Tests._11.map(map)
+//   }
+ex_11: String
+  let listmap = ListMap.cons<Nat>(({1,1}), ListMap.cons<Nat>(({2,2}), ListMap.cons<Nat>(({3,3}), ListMap.empty<Nat>)))
+  show<Nat>(Nat.show, listmap)

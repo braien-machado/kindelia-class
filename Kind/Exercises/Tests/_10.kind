@@ -154,7 +154,7 @@ Tests._10.split(split: String -> String -> List<String>): IO<Unit>
 Tests._10.take_while(take_while: (Char -> Bool) -> String -> String): IO<Unit>
   IO {
     Assert.string("take_while is_upper a", take_while(Char.is_upper, a), "HI")
-    Assert.string("take_while is_equal('t'), c", take_while(Char.eql('t'), c), "t")
+    Assert.string("take_while is_equal('t'), c", take_while(Char.eql('t'), c), "tt")
     IO.print("take_while: All terms tested")
   }
 

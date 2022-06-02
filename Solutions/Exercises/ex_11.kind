@@ -66,7 +66,10 @@ filter<A: Type>(cond: A -> Bool, lm: ListMap<A>): ListMap<A>
 
 // Applies a function to all Values
 map<A: Type>(fn: A -> A, lm: ListMap<A>): ListMap<A>
-  ?map
+  case lm {
+    empty: lm
+    cons: ListMap.cons<A>(({ lm.head@fst, fn(lm.head@snd) }), map<A>(fn, lm.tail))
+  }
 
 // Runs x gets and y sets
 stress_test(sets: Nat, gets: Nat): String
@@ -86,5 +89,5 @@ ex_11: IO<Unit>
     Tests._11.mut(mut)
     Tests._11.has(has)
     Tests._11.filter(filter)
-    // Tests._11.map(map)
+    Tests._11.map(map)
   } 

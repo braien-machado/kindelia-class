@@ -16,12 +16,10 @@ set<A: Type>(key: Nat, value: A, lm: ListMap<A>): ListMap<A>
 get<A: Type>(key: Nat, lm: ListMap<A>): Maybe<A>
   case lm {
     empty: Maybe.none<A>
-    cons: case lm.head {
-      new: case Nat.eql(key, lm.head.fst) {
-        true: Maybe.some<A>(lm.head.snd)
+    cons: case Nat.eql(key, lm.head@fst) {
+        true: Maybe.some<A>(lm.head@snd) // <-- `@` make it possible to skip `open lm.head`
         false: get<A>(key, lm.tail)
       } 
-    }
   }
 
 // Applies a function to a Value from a Key
@@ -59,7 +57,7 @@ stress_test(sets: Nat, gets: Nat): String
 
 ex_11: IO<Unit>
   IO {
-    // Tests._11.set(set)
+    Tests._11.set(set)
     Tests._11.get(get)
     // Tests._11.mut(mut)
     // Tests._11.has(has)

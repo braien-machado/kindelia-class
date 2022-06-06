@@ -107,10 +107,14 @@ filter<A: Type>(cond: A -> Bool, map: BitsMap<A>): BitsMap<A>
 
 //Applies a function to  all values of the map and returns the map modified 
 
-map<A: Type, B: Type>(fn: A -> B, map: BitsMap<A>): BitsMap<B>
-  ?map
-
-
+map<A: Type, B: Type>(fn: A -> B, bitsmap: BitsMap<A>): BitsMap<B>
+  case bitsmap {
+    new: BitsMap.new<B>
+    tie: case bitsmap.val {
+      none: BitsMap.tie<B>(Maybe.none<B>, map<A, B>(fn, bitsmap.lft), map<A, B>(fn, bitsmap.rgt))
+      some: BitsMap.tie<B>(Maybe.some<B>(fn(bitsmap.val.value)), map<A, B>(fn, bitsmap.lft), map<A, B>(fn, bitsmap.rgt))
+    }
+  }
 
 // Returns a list of keys with all Keys of the map
 
@@ -145,14 +149,14 @@ BitsMap.show.go<A: Type>(depth: Nat, show: A -> String, map: BitsMap<A>): String
 
 ex_12:_
 //   stress_test(1000000, 1000000)
-  let map = BitsMap.new!
-  let map = set!(Bits.o(Bits.e), 0, map)
-  let map = set!(Bits.i(Bits.e), 1, map)
-  let map = set!(Bits.o(Bits.i(Bits.e)), 2, map)
-  let map = set!(Bits.i(Bits.i(Bits.e)), 3, map)
-  let map = set!(Nat.to_bits(185), 185, map)
-  let map = set!(Nat.to_bits(14), 14, map)
-  let map = filter!(Nat.is_zero, map)
-  BitsMap.show!(Nat.show, map)
+  let bitsmap = BitsMap.new!
+  let bitsmap = set!(Bits.o(Bits.e), 0, bitsmap)
+  let bitsmap = set!(Bits.i(Bits.e), 1, bitsmap)
+  let bitsmap = set!(Bits.o(Bits.i(Bits.e)), 2, bitsmap)
+  let bitsmap = set!(Bits.i(Bits.i(Bits.e)), 3, bitsmap)
+  let bitsmap = set!(Nat.to_bits(185), 185, bitsmap)
+  let bitsmap = set!(Nat.to_bits(14), 14, bitsmap)
+  let bitsmap = map<Nat, Bool>(Nat.is_zero, bitsmap)
+  BitsMap.show!(Bool.show, bitsmap)
 
   // Maybe.show!(Nat.show, get!(Nat.to_bits(186), map))

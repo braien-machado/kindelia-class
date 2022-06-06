@@ -59,8 +59,15 @@ mut<A: Type>(key: Bits, fn: A -> A, map: BitsMap<A>): BitsMap<A>
   // map of the type BitsMap<A>
   // returns a BitsMap<A>
 
-//del<A: Type>(...)
-
+del<A: Type>(key: Bits, map: BitsMap<A>): BitsMap<A>
+  case map {
+    new: map
+    tie: case key {
+      e: BitsMap.tie<A>(Maybe.none<A>, map.lft, map.rgt)
+      o: BitsMap.tie<A>(map.val, del<A>(key.pred, map.lft), map.rgt)
+      i: BitsMap.tie<A>(map.val, map.lft, del<A>(key.pred, map.rgt))
+    }
+  }
 
 //Verifies if has any value for the given key, if has no value returns false, if
 //has the value returns true
@@ -130,7 +137,7 @@ ex_12:_
   let map = set!(Bits.i(Bits.i(Bits.e)), 3, map)
   let map = set!(Nat.to_bits(185), 185, map)
   let map = set!(Nat.to_bits(14), 14, map)
-  let map = mut!(Nat.to_bits(2), Nat.double, map)
+  let map = del!(Nat.to_bits(14), map)
 
   BitsMap.show!(Nat.show, map)
 

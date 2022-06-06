@@ -93,11 +93,17 @@ has<A: Type>(key: Bits, map: BitsMap<A>): Bool
 //Verifies all values of the map and if they don't match the condition gets
 //removed, if the condition is matched, the value and the key are kept
 
-
 filter<A: Type>(cond: A -> Bool, map: BitsMap<A>): BitsMap<A>
-  ?filter
-
-
+  case map {
+    new: map
+    tie: case map.val {
+      none: BitsMap.tie<A>(map.val, filter<A>(cond, map.lft), filter<A>(cond, map.rgt))
+      some: case cond(map.val.value) {
+        true: BitsMap.tie<A>(map.val, filter<A>(cond, map.lft), filter<A>(cond, map.rgt))
+        false: BitsMap.tie<A>(Maybe.none<A>, filter<A>(cond, map.lft), filter<A>(cond, map.rgt))
+      }
+    }
+  }
 
 //Applies a function to  all values of the map and returns the map modified 
 
@@ -146,8 +152,7 @@ ex_12:_
   let map = set!(Bits.i(Bits.i(Bits.e)), 3, map)
   let map = set!(Nat.to_bits(185), 185, map)
   let map = set!(Nat.to_bits(14), 14, map)
-  let bool = has!(Bits.o(Bits.o(Bits.e)), map)
-  bool
-  // BitsMap.show!(Nat.show, map)
+  let map = filter!(Nat.is_zero, map)
+  BitsMap.show!(Nat.show, map)
 
   // Maybe.show!(Nat.show, get!(Nat.to_bits(186), map))

@@ -118,10 +118,26 @@ map<A: Type, B: Type>(fn: A -> B, bitsmap: BitsMap<A>): BitsMap<B>
 
 // Returns a list of keys with all Keys of the map
 
+key.go<A: Type>(map: BitsMap<A>, acc: Bits): List<Bits> // <-- shows keys with Maybe.some
+  case map {
+    new: List.nil<Bits>
+    tie: case map.val {
+      none: List.concat<Bits>(key.go<A>(map.lft, Bits.o(acc)), key.go<A>(map.rgt, Bits.i(acc)))
+      some: List.cons<Bits>(Bits.reverse(acc), List.concat<Bits>(key.go<A>(map.lft, Bits.o(acc)), key.go<A>(map.rgt, Bits.i(acc))))
+    }
+  }
+
+// key.go<A: Type>(map: BitsMap<A>, acc: Bits): List<Bits> // <-- shows all keys
+//   case map {
+//     new: List.nil<Bits>
+//     tie: List.cons<Bits>(acc, List.concat<Bits>(key.go<A>(map.lft, Bits.o(acc)), key.go<A>(map.rgt, Bits.i(acc))))
+//   }
+
 key<A: Type>(map: BitsMap<A>): List<Bits>
-  ?key
-
-
+  case map {
+    new: List.nil<Bits>
+    tie: List.concat<Bits>(key.go<A>(map.lft, Bits.o(Bits.e)), key.go<A>(map.rgt, Bits.i(Bits.e)))
+  }
 
 //Unites two different maps into one, keeping its structure
 
@@ -157,6 +173,8 @@ ex_12:_
   let bitsmap = set!(Nat.to_bits(185), 185, bitsmap)
   let bitsmap = set!(Nat.to_bits(14), 14, bitsmap)
   let bitsmap = map<Nat, Bool>(Nat.is_zero, bitsmap)
-  BitsMap.show!(Bool.show, bitsmap)
+  // BitsMap.show!(Bool.show, bitsmap)
+  // List.show!(Bits.show, BitsMap.keys!(bitsmap)) //"[0,01,0111,1,10011101,11]"
+  List.show!(Bits.show, key!(bitsmap))
 
   // Maybe.show!(Nat.show, get!(Nat.to_bits(186), map))

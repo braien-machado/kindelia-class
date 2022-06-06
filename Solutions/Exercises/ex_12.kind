@@ -39,8 +39,17 @@ get<A: Type>(key: Bits, map:BitsMap<A>): Maybe<A>
 //doesn't change the map
 
 mut<A: Type>(key: Bits, fn: A -> A, map: BitsMap<A>): BitsMap<A>
-  ?mut
-
+  case map {
+    new: map
+    tie: case key {
+      e: case map.val {
+        none: map
+        some: BitsMap.tie<A>(Maybe.some<A>(fn(map.val.value)), map.lft, map.rgt)
+      }
+      o: BitsMap.tie<A>(map.val, mut<A>(key.pred, fn,  map.lft), map.rgt)
+      i: BitsMap.tie<A>(map.val, map.lft, mut<A>(key.pred, fn, map.rgt))
+    }
+  }
 
 //Deletes a Value of the map within the given key, returns the same map if no
 //value is found for that key
@@ -121,6 +130,8 @@ ex_12:_
   let map = set!(Bits.i(Bits.i(Bits.e)), 3, map)
   let map = set!(Nat.to_bits(185), 185, map)
   let map = set!(Nat.to_bits(14), 14, map)
-// BitsMap.show!(Nat.show, map)
+  let map = mut!(Nat.to_bits(2), Nat.double, map)
 
-Maybe.show!(Nat.show, get!(Nat.to_bits(186), map))
+  BitsMap.show!(Nat.show, map)
+
+  // Maybe.show!(Nat.show, get!(Nat.to_bits(186), map))

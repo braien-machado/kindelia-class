@@ -77,9 +77,18 @@ del<A: Type>(key: Bits, map: BitsMap<A>): BitsMap<A>
   // map of the type BitsMap<A>
   // returns a Bool
 
-//has...
-
-
+has<A: Type>(key: Bits, map: BitsMap<A>): Bool
+  case map {
+    new: Bool.false
+    tie: case key {
+      e: case map.val {
+        none: Bool.false
+        some: Bool.true
+      }
+      o: has<A>(key.pred, map.lft)
+      i: has<A>(key.pred, map.rgt)
+    }
+  }
 
 //Verifies all values of the map and if they don't match the condition gets
 //removed, if the condition is matched, the value and the key are kept
@@ -137,8 +146,8 @@ ex_12:_
   let map = set!(Bits.i(Bits.i(Bits.e)), 3, map)
   let map = set!(Nat.to_bits(185), 185, map)
   let map = set!(Nat.to_bits(14), 14, map)
-  let map = del!(Nat.to_bits(14), map)
-
-  BitsMap.show!(Nat.show, map)
+  let bool = has!(Bits.o(Bits.o(Bits.e)), map)
+  bool
+  // BitsMap.show!(Nat.show, map)
 
   // Maybe.show!(Nat.show, get!(Nat.to_bits(186), map))

@@ -127,23 +127,27 @@ key.go<A: Type>(map: BitsMap<A>, acc: Bits): List<Bits> // <-- shows keys with M
     }
   }
 
-// key.go<A: Type>(map: BitsMap<A>, acc: Bits): List<Bits> // <-- shows all keys
-//   case map {
-//     new: List.nil<Bits>
-//     tie: List.cons<Bits>(acc, List.concat<Bits>(key.go<A>(map.lft, Bits.o(acc)), key.go<A>(map.rgt, Bits.i(acc))))
-//   }
-
 key<A: Type>(map: BitsMap<A>): List<Bits>
   case map {
     new: List.nil<Bits>
-    tie: List.concat<Bits>(key.go<A>(map.lft, Bits.o(Bits.e)), key.go<A>(map.rgt, Bits.i(Bits.e)))
+    tie: key.go<A>(map, Bits.e)
   }
 
 //Unites two different maps into one, keeping its structure
 
-union<A: Type>(a: BitsMap<A>, b: BitsMap<A>): BitsMap<A>
-  ?union
+union.go<A: Type>(a: BitsMap<A>, b: BitsMap<A>, keys: List<Bits>): BitsMap<A>
+  case keys {
+    nil: b
+    cons:
+      let maybe = get<A>(keys.head, a)
+      case maybe {
+        none: union.go<A>(a, b, keys.tail)
+        some: union.go<A>(a, set<A>(keys.head, maybe.value, b), keys.tail)
+      }
+  }
 
+union<A: Type>(a: BitsMap<A>, b: BitsMap<A>): BitsMap<A>
+  union.go<A>(a, b, key<A>(a))
 
 //Stress Test for BitsMap
 
@@ -165,16 +169,26 @@ BitsMap.show.go<A: Type>(depth: Nat, show: A -> String, map: BitsMap<A>): String
 
 ex_12:_
 //   stress_test(1000000, 1000000)
-  let bitsmap = BitsMap.new!
-  let bitsmap = set!(Bits.o(Bits.e), 0, bitsmap)
-  let bitsmap = set!(Bits.i(Bits.e), 1, bitsmap)
-  let bitsmap = set!(Bits.o(Bits.i(Bits.e)), 2, bitsmap)
-  let bitsmap = set!(Bits.i(Bits.i(Bits.e)), 3, bitsmap)
-  let bitsmap = set!(Nat.to_bits(185), 185, bitsmap)
-  let bitsmap = set!(Nat.to_bits(14), 14, bitsmap)
-  let bitsmap = map<Nat, Bool>(Nat.is_zero, bitsmap)
+  let a = BitsMap.new!
+  let a = set!(Bits.e, "a", a)
+  let a = set!(Bits.i(Bits.e), "d", a)
+  let a = set!(Bits.o(Bits.o(Bits.e)), "b", a)
+  let a = set!(Bits.o(Bits.i(Bits.e)), "c", a)
+  let b = BitsMap.new!
+  let b = set!(Bits.i(Bits.e), "p", b)
+  let b = set!(Bits.o(Bits.e), "j", b)
+  let b = set!(Bits.i(Bits.i(Bits.e)), "m", b)
+  let b = union!(a, b)
+  BitsMap.show!(String.show, b)
+  // let bitsmap = BitsMap.new!
+  // let bitsmap = set!(Bits.o(Bits.e), 0, bitsmap)
+  // let bitsmap = set!(Bits.i(Bits.e), 1, bitsmap)
+  // let bitsmap = set!(Bits.o(Bits.i(Bits.e)), 2, bitsmap)
+  // let bitsmap = set!(Bits.i(Bits.i(Bits.e)), 3, bitsmap)
+  // let bitsmap = set!(Nat.to_bits(185), 185, bitsmap)
+  // let bitsmap = set!(Nat.to_bits(14), 14, bitsmap)
+  // let bitsmap = map<Nat, Bool>(Nat.is_zero, bitsmap)
   // BitsMap.show!(Bool.show, bitsmap)
-  // List.show!(Bits.show, BitsMap.keys!(bitsmap)) //"[0,01,0111,1,10011101,11]"
-  List.show!(Bits.show, key!(bitsmap))
+  // List.show!(Bits.show, key!(bitsmap))
 
   // Maybe.show!(Nat.show, get!(Nat.to_bits(186), map))
